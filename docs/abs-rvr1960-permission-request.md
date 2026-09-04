@@ -1,19 +1,19 @@
-# Borrador — solicitud de permiso a American Bible Society (RVR1960)
+# Draft: permission request to American Bible Society (RVR1960)
 
-> Preparado el 2026-09-04 a partir del spike de licencia
-> ([spikes/2026-09-03-viabilidad.md](spikes/2026-09-03-viabilidad.md) §C). Los campos entre
-> corchetes los completa Andrés. ABS pide usar su formulario «Permission Request Form» en
-> americanbible.org/rights-and-permissions; este correo sirve como texto para el formulario
-> o como mensaje directo. Se envía en inglés (el equipo de licencias es de EE.UU.) con copia
-> a la Sociedad Bíblica Colombiana, y se adjunta la versión en español para ellos.
+> Prepared on 2026-09-04 from the license spike
+> ([spikes/2026-09-03-feasibility.md](spikes/2026-09-03-feasibility.md) §C). The fields in
+> square brackets are filled in by Andrés. ABS asks to use its "Permission Request Form" at
+> americanbible.org/rights-and-permissions; this email works as the text for the form or as
+> a direct message. It is sent in English (the licensing team is in the US) with a copy to
+> the Sociedad Bíblica Colombiana, and the Spanish version is attached for them.
 
-**Para:** licensing@americanbible.org
+**To:** licensing@americanbible.org
 **CC:** contacto@sbcol.org (Sociedad Bíblica Colombiana)
-**Asunto:** Permission request — offline copy of RVR1960 text in an internal, non-commercial church video tool (Iglesia de Tunja, Colombia)
+**Subject:** Permission request — offline copy of RVR1960 text in an internal, non-commercial church video tool (Iglesia de Tunja, Colombia)
 
 ---
 
-## Versión en inglés (la que se envía)
+## English version (the one that is sent)
 
 Dear Rights and Permissions team,
 
@@ -62,7 +62,7 @@ Sincerely,
 
 ---
 
-## Versión en español (para la Sociedad Bíblica Colombiana)
+## Spanish version (for the Sociedad Bíblica Colombiana)
 
 Estimado equipo de derechos y permisos:
 
@@ -110,9 +110,9 @@ Atentamente,
 
 ---
 
-## Mientras llega la respuesta
+## While the answer arrives
 
-El flujo actual (copiar por prédica los versículos leídos, video no comercial de iglesia
-local, sigla «(RVR 1960)» y leyenda completa en créditos) cae dentro del uso permitido sin
-solicitud. La app trae RVR1909 (dominio público) empaquetada y un campo para pegar el texto
-RVR1960 de cada versículo, exactamente como hoy.
+The current flow (copying the verses read in each sermon, non-commercial local church
+video, "(RVR 1960)" abbreviation and full notice in the credits) falls within the use
+allowed without a request. The app ships RVR1909 (public domain) bundled and a field to
+paste the RVR1960 text of each verse, exactly as today.

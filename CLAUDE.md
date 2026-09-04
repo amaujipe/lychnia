@@ -1,53 +1,58 @@
-# Lychnia — instrucciones para Claude Code
+# Lychnia: instructions for Claude Code
 
-## Qué es esto
+## What this is
 
-App de escritorio multiplataforma que reemplaza al pipeline de prédicas de
-`~/Repositorios/multimedia-iglesia-tunja` (Make + scripts + Claude Code como orquestador)
-por un motor propio con API local y una UI Tauri. Ver `README.md`.
+Cross-platform desktop app that replaces the sermon pipeline of
+`~/Repositorios/multimedia-iglesia-tunja` (Make + scripts + Claude Code as orchestrator)
+with its own engine, a local API and a Tauri UI. See `README.md`.
 
-## Lee esto al empezar una sesión
+## Read this when starting a session
 
-1. `docs/BITACORA.md`: qué se hizo la última vez y qué sigue.
-2. `docs/CONTEXTO.md`: origen, entregables, reglas duras, decisiones tomadas.
-3. La spec del sub-proyecto en curso en `docs/superpowers/specs/`.
-4. Si hace falta el detalle del pipeline actual: `docs/PIPELINE-ACTUAL.md` y el código fuente
-   en `~/Repositorios/multimedia-iglesia-tunja/recursos/scripts/pipeline/` (versionado).
+1. `docs/JOURNAL.md`: what was done last time and what comes next.
+2. `docs/CONTEXT.md`: origin, deliverables, hard rules, decisions taken.
+3. The spec of the sub-project in progress in `docs/superpowers/specs/`.
+4. If the detail of the current pipeline is needed: `docs/CURRENT-PIPELINE.md` and the source
+   code in `~/Repositorios/multimedia-iglesia-tunja/recursos/scripts/pipeline/` (versioned).
 
-La memoria Engram del proyecto anterior está bajo el nombre `multimedia-iglesia-tunja`;
-buscar ahí con `all_projects=true` si falta contexto de decisiones de junio a septiembre 2026.
+The Engram memory of the previous project is under the name `multimedia-iglesia-tunja`;
+search there with `all_projects=true` if context about decisions from June to September 2026
+is missing.
 
-## Cómo trabaja Andrés
+## How Andrés works
 
-- Debate punto por punto antes de construir: opciones numeradas, una línea de
-  recomendación cada una. Decide él. Luego se implementa de punta a punta y se prueba
-  antes de reportar.
-- Explicaciones cortas. Si pide «explícamelo más pero sin tanto texto», 5 a 8 líneas.
-- Español de Colombia. En mensajes de la herramienta al operador se usa voseo suave
-  («revisá», «aprobalo»), heredado del Makefile original.
-- Nunca proponer versionar los textos de las prédicas producidas (decisión cerrada).
+- Debate point by point before building: numbered options, a one-line recommendation for
+  each. He decides. Then implement end to end and test before reporting.
+- Short explanations. If he asks «explain it more but with less text», 5 to 8 lines.
+- Language policy (project decision, 2026-09-04): conversation with Andrés in Spanish;
+  everything committed to this repo in English: code, identifiers, comments, docs, specs,
+  plans, commit messages. Operator-facing text (CLI/UI messages, template comments in
+  project.toml and INFO.md) is Spanish by default, served from i18n files
+  (`lychnia/i18n/es.toml`, `en.toml`), never inline in code. Spanish operator messages use
+  soft voseo («revisá», «aprobalo»), inherited from the original Makefile.
+- Never propose versioning the texts of the produced sermons (closed decision).
 
-## Reglas duras del dominio (no negociables, aprendidas a los golpes)
+## Domain hard rules (non-negotiable, learned the hard way)
 
-Están explicadas en `docs/CONTEXTO.md` §4. Las diez en una línea cada una:
+They are explained in `docs/CONTEXT.md` §4. The ten, one line each:
 
-1. Render final en software (libx264); solo la Fase 1 (segmentos) va por GPU.
-2. Frame-exacto (`-frames:v`) y fronteras de plano en la rejilla de 1/30 s.
-3. Un solo `.ass` quemado con un único filtro libass.
-4. Cada tiempo se ancla a datos reales (SRT, silencios); el LLM nunca inventa tiempos.
-5. Versículos: todos los que lee, completos, RVR1960 verificado, sin huecos en lectura corrida.
-6. Fuentes por nombre interno y calibración libass/PIL (Merriweather 0.573, DM Sans 0.757).
-7. `aresample=48000` al final de la cadena de audio.
-8. Shorts con audio del maestro y recorte al pastor a pantalla completa, nunca blur.
-9. Sincronía medida contra el audio del render, con el mismo tipo de seek.
-10. Un cambio de config no rehace lo caro: huellas por fase.
+1. Final render in software (libx264); only Phase 1 (segments) goes through the GPU.
+2. Frame-exact (`-frames:v`) and shot boundaries on the 1/30 s frame grid.
+3. A single burned-in `.ass` with a single libass filter.
+4. Every time is anchored to real data (SRT, silences); the LLM never invents times.
+5. Verses: every one that is read, complete, verified RVR1960, no gaps in a continuous reading.
+6. Fonts by internal name and libass/PIL calibration (Merriweather 0.573, DM Sans 0.757).
+7. `aresample=48000` at the end of the audio chain.
+8. Shorts with audio from the master and a full-screen crop on the preacher, never blur.
+9. Sync measured against the render's audio, with the same kind of seek.
+10. A config change does not redo the expensive work: per-phase fingerprints.
 
-## Convenciones de código
+## Code conventions
 
-- Python 3.12 (objetivo de empaquetado con PyInstaller), `pathlib`, `subprocess` con listas
-  (nunca shell), rutas con `/` para filtros de ffmpeg. Un solo código para los tres SO.
-- Nombres en español en dominio y CLI (tareas, artefactos, gates); inglés solo donde la
-  librería lo impone.
-- Tests: unitarios para orquestador y huellas; *golden tests* contra los artefactos reales
-  de la prédica 2026-08-30 (plan de 87 planos y `callouts.ass` byte a byte).
-- Commits en español, estilo `feat(motor): …`, `docs: …`.
+- Python 3.12 (packaging target with PyInstaller), `pathlib`, `subprocess` with lists
+  (never shell), paths with `/` for ffmpeg filters. One codebase for the three operating systems.
+- English identifiers everywhere (tasks, artifacts, API routes, CLI commands, TOML keys).
+  Domain words follow the glossary in the Engine spec (sermon, master recording, cut,
+  camera plan, callouts, outline, preview, fingerprint, provided artifact).
+- Tests: unit tests for the orchestrator and fingerprints; *golden tests* against the real
+  artifacts of the 2026-08-30 sermon (87-shot plan and `callouts.ass` byte for byte).
+- Commits in English, Conventional Commits style (`feat(engine): ...`, `docs: ...`).
