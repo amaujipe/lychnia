@@ -1,4 +1,4 @@
-# El pipeline actual — lo que Kerigma migra
+# El pipeline actual — lo que Lychnia migra
 
 > Estado al 2026-09-04 del repo original `~/Repositorios/multimedia-iglesia-tunja`
 > (commit `39da6d3`). Los scripts están versionados en `recursos/scripts/pipeline/` y se
@@ -12,7 +12,7 @@
 | `cfg.py` | Config por prédica. Lee `proyecto.toml`, deriva `dur`, `nframes`, `fin_cam` (ffprobe), expone `af_voz()`, `seg()`, huellas, `--init`. | `proyecto.toml`, `ENTREGA/` | — | Se vuelve `proyecto/config.py` (pydantic). Instancia global `CFG` al importar: eliminar. |
 | `transcribir.py` | faster-whisper (CPU int8, VAD, sin contexto) o whisper-cli GPU (`-mc 0` + VAD). Detector de bucle (frase ≥4 palabras ×8 seguidas o ×20 total) y respaldo automático. Escribe srt/vtt/txt/tsv/json. | maestro | `1-transcripcion/predica.*` | Ya es genérico y sin `CFG`. Se vuelve proveedor `Transcriptor`. |
 | `salud_camaras.py` | Negros, congelados, reencuadres por cámara (brillo, std, dif a 1 fps, 192×108). | cámara | texto | Genérico. |
-| `slide_events.py` `slide_texto.py` `sync_pantalla.py` `sync_movimiento.py` `escena_maestro.py` | Sincronía de cámaras mudas por cambios de diapositiva (interpolación sub-frame) o energía de movimiento; mapa de qué cámara está al aire en el maestro. | cámaras, maestro, crop de pantalla | offsets, tablas | Herramientas manuales hoy. En Kerigma v1: «asistentes» expuestos por API/CLI, offsets los escribe el operador. |
+| `slide_events.py` `slide_texto.py` `sync_pantalla.py` `sync_movimiento.py` `escena_maestro.py` | Sincronía de cámaras mudas por cambios de diapositiva (interpolación sub-frame) o energía de movimiento; mapa de qué cámara está al aire en el maestro. | cámaras, maestro, crop de pantalla | offsets, tablas | Herramientas manuales hoy. En Lychnia v1: «asistentes» expuestos por API/CLI, offsets los escribe el operador. |
 | `planear_camaras.py` | Plan A/B: recorre `[[plan.fases]]`, imanta cortes al silencio más largo cercano (`silencedetect -42 dB, 0.35 s`, medido con `-vn`), fusiona planos iguales, cierre en A, fronteras a la rejilla de 1/30 s, valida. | fases, maestro | `plan_camaras.json` + tabla | Se vuelve tarea `plan`. Golden: 87 planos de 2026-08-30. |
 | `srt_util.py` | `find(ancla, after, nth)` y `find_in` (interpola dentro de la cue). Normaliza tildes y ñ. Muere si no encuentra. | `predica.srt` | segundos | Módulo global `CUES` al importar: eliminar. |
 | `estilo_callouts.py` | Motor ASS «Propuesta C»: `verse_lt`, `verse_full`, `quote`, `point`, `list_lt`. Mide con PIL calibrado. | — | eventos ASS | Genérico. Busca `recursos/marca/fonts` subiendo directorios: pasar ruta explícita. |
@@ -73,7 +73,7 @@ shorts/.done ─► shorts-metadata.md         (aportado)
 
 CARRIL CONTENIDO
 fondo.png (aportado) + guion.md ─► miniatura.jpg   (generar_miniatura --fondo-ia)
-miniatura.jpg ─► .miniatura.url            (imageforge → R2; FUERA de Kerigma v1)
+miniatura.jpg ─► .miniatura.url            (imageforge → R2; FUERA de Lychnia v1)
 <slug>.src.mdx (aportado) + .miniatura.url ─► <slug>.mdx   (sed de __MINIATURA_URL__ y __YOUTUBE_ID__)
 predica.srt + huella_corte ─► predica-final.srt   (hacer_srt)
 publicacion-youtube.md                     (aportado)
@@ -83,7 +83,7 @@ Reglas de recursos: GPU (transcribir si whisper-cli, segmentos) nunca dos a la v
 pesado (render final) uno a la vez; lo demás es liviano. `make -j4 contenido video` corre
 los dos carriles. `make estado` es el tablero de qué está hecho y qué falta.
 
-## 4. Lo que hace Claude Code hoy (y que Kerigma debe cubrir con Redactor + humano)
+## 4. Lo que hace Claude Code hoy (y que Lychnia debe cubrir con Redactor + humano)
 
 | Artefacto | Desde | Reglas |
 |---|---|---|

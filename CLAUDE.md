@@ -1,4 +1,4 @@
-# Kerigma — instrucciones para Claude Code
+# Lychnia — instrucciones para Claude Code
 
 ## Qué es esto
 
