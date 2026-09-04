@@ -22,7 +22,8 @@ este.
   una empresa en Colombia. Tras verificar 22 candidatas contra empresas, apps, GitHub,
   paquetes y dominios, Andrés eligió **Lychnia** (λυχνία, «candelero», Mateo 5:15): sin
   colisiones en ningún registro; su único costo es la pronunciación («lik-NÍ-a»).
-  Repo en `~/Repositorios/amaujipe/lychnia`. Pendiente: confirmar a mano en sic.gov.co.
+  Repo en `~/Repositorios/amaujipe/lychnia`, publicado en https://github.com/amaujipe/lychnia
+  (rama `main`). Pendiente: confirmar a mano en sic.gov.co.
 - **Spec del Motor** escrita: `docs/superpowers/specs/2026-09-04-motor-design.md`.
   Pendiente de revisión de Andrés antes de pasar al plan de implementación
   (skill `superpowers:writing-plans`).

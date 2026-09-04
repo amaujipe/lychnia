@@ -10,6 +10,8 @@ la luz no se pone debajo de un almud «sino sobre el candelero, y alumbra a todo
 están en casa». La app toma el mensaje predicado y lo pone donde todos lo vean: web,
 YouTube y redes.
 
+Repositorio: https://github.com/amaujipe/lychnia
+
 ## Estado
 
 **Fase de diseño (septiembre 2026).** Existe la spec del primer sub-proyecto, el Motor.
