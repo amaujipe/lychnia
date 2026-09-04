@@ -31,9 +31,10 @@ plan de implementación y se arranca por el orquestador con golden tests.
 - Enviar el correo a licensing@americanbible.org (con copia a contacto@sbcol.org); el
   borrador en inglés y español está en `docs/correo-abs-rvr1960.md`, faltan los datos entre
   corchetes.
-- Elegir el nombre definitivo del proyecto: «Kerigma» tiene colisiones con apps y webs
-  existentes; hay una lista de candidatos verificados en curso. Al elegirlo: renombrar la
-  carpeta del repo, el paquete Python y reemplazar el nombre en los docs.
+- ~~Elegir el nombre definitivo~~ **Decidido: se queda Kerigma** (2026-09-04). Se verificaron
+  diez alternativas (Candelero, Azotea, Amanuense, Pregonero, Ambón libres o casi; Pregón,
+  Sermo, Escriba, Atrio, Lumbrera ocupados) y Andrés prefirió mantener Kerigma aunque
+  existan apps y webs con ese nombre.
 
 **Hecho en la misma sesión, después:** fixtures de la prédica 2026-08-30 versionadas en
 `motor/tests/golden/fixtures/2026-08-30/` (TOMLs, SRT, TSV, silencios, plan de 87 planos y
