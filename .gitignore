@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Modelos (van en el paquete de modelos, nunca en git)
+*.gguf
+*.bin
+*.onnx
+
+# Proyectos de prédicas (medios y salidas): fuera de git por decisión de Andrés
+proyectos/
+
+# Tauri / Node
+app/node_modules/
+app/src-tauri/target/
+
+# Config local de Claude Code
+.claude/settings.local.json
+
+# SO / editores
+.DS_Store
+Thumbs.db
+*.swp
+*~
