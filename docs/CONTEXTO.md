@@ -1,4 +1,4 @@
-# Contexto — de dónde viene Kerigma y qué tiene que hacer
+# Contexto — de dónde viene Lychnia y qué tiene que hacer
 
 > Escrito el 2026-09-04 al abrir este repo, a partir del pipeline que funciona hoy en
 > `~/Repositorios/multimedia-iglesia-tunja` (en adelante «el repo original»). Este documento
@@ -15,7 +15,7 @@
 - Entre junio y septiembre de 2026 se construyó un pipeline con FFmpeg + Python + whisper,
   orquestado por `make`, donde **Claude Code hacía de director técnico**: redactaba guion,
   callouts, metadata y blog desde la transcripción, y corría los `make`.
-- **Kerigma** convierte ese pipeline en una app de escritorio que corre sola, en cualquier
+- **Lychnia** convierte ese pipeline en una app de escritorio que corre sola, en cualquier
   PC de la iglesia o de un voluntario, con o sin internet, con o sin GPU.
 
 ## 2. Qué entra y qué sale
@@ -63,7 +63,7 @@ web) **queda fuera de v1** y sigue manual.
 6. **Entrega**: Fase 2 render final en software (concat + libass + cadena de voz), shorts,
    metadata de shorts.
 
-Dos ideas de diseño que Kerigma hereda tal cual:
+Dos ideas de diseño que Lychnia hereda tal cual:
 
 - **Una sola fuente de verdad por prédica**: `proyecto.toml` (meta, fuentes, sync, corte,
   video, audio, gate_b, shorts, plan.fases). Lo derivado no se configura. Los scripts son
@@ -93,7 +93,7 @@ repite el título del video (Pescaseo); cadena de voz canónica
 `pan → highpass 80 → speechnorm → alimiter → loudnorm I=-15 → aresample 192k → alimiter → aresample 48k`
 con tres perillas por prédica (mezcla, retardo, LUFS).
 
-## 5. Decisiones tomadas para Kerigma (brainstorm 2026-09-03)
+## 5. Decisiones tomadas para Lychnia (brainstorm 2026-09-03)
 
 | # | Decisión | Alternativas descartadas |
 |---|---|---|

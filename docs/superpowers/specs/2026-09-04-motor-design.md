@@ -1,4 +1,4 @@
-# Spec — Motor de Kerigma (sub-proyecto 1)
+# Spec — Motor de Lychnia (sub-proyecto 1)
 
 **Fecha:** 2026-09-04 · **Estado:** borrador para revisión de Andrés
 **Contexto previo:** [CONTEXTO.md](../../CONTEXTO.md) (decisiones), [PIPELINE-ACTUAL.md](../../PIPELINE-ACTUAL.md)
@@ -6,7 +6,7 @@
 
 ## 1. Qué es el Motor y qué no
 
-El Motor es el proceso Python que hace todo el trabajo de Kerigma: sabe qué tareas existen,
+El Motor es el proceso Python que hace todo el trabajo de Lychnia: sabe qué tareas existen,
 en qué orden van, qué está hecho, qué falta y qué hay que aprobar; corre ffmpeg, whisper y
 los generadores; y expone eso por una **API local** para la interfaz de escritorio y por
 una **CLI** para operarlo sin interfaz. Reemplaza al `Makefile` del repo original y a Claude
@@ -45,11 +45,11 @@ personas, interfaz Tauri, instaladores, paquete de modelos, publicación (YouTub
 ## 3. Estructura del repo tras este sub-proyecto
 
 ```
-kerigma/
+lychnia/
 ├── motor/
-│   ├── pyproject.toml               # paquete `kerigma`, Python 3.12
-│   ├── kerigma/
-│   │   ├── cli.py                   # `kerigma …` (Typer)
+│   ├── pyproject.toml               # paquete `lychnia`, Python 3.12
+│   ├── lychnia/
+│   │   ├── cli.py                   # `lychnia …` (Typer)
 │   │   ├── api/                     # FastAPI: rutas, WebSocket, autenticación
 │   │   ├── orq/                     # orquestador: grafo, tarea, huella, estado, cola, eventos
 │   │   ├── proyecto/                # config (pydantic + tomlkit), descubrimiento de ENTREGA, capas
@@ -67,10 +67,10 @@ kerigma/
 ```
 
 Los proyectos de prédicas viven **fuera del repo**, en una raíz que elige el operador
-(por defecto `~/Kerigma/proyectos/`). Cada proyecto conserva la estructura actual
+(por defecto `~/Lychnia/proyectos/`). Cada proyecto conserva la estructura actual
 (`ENTREGA/`, `1-transcripcion/`, `3-guion/`, `4-video/`, `5-youtube/`, `6-blog/`,
 `proyecto.toml`) para que las prédicas viejas sigan siendo legibles, y suma una carpeta
-`.kerigma/` con el estado del orquestador.
+`.lychnia/` con el estado del orquestador.
 
 ## 4. Modelo de dominio
 
@@ -80,8 +80,8 @@ Los proyectos de prédicas viven **fuera del repo**, en una raíz que elige el o
 | **Config** | El `proyecto.toml` validado y con derivados (`dur`, `nframes`, `fin_cam`, huellas). | memoria, se recarga al cambiar el archivo |
 | **Tarea** | Nodo del grafo. Declara `nombre`, `entradas` (artefactos o secciones de config), `salidas` (artefactos), `huella(config)`, `recurso` (`gpu`, `cpu_pesado`, `liviano`), `gate` (si necesita aprobación humana para que sus consumidores corran) y `ejecutar(ctx)`. | código |
 | **Artefacto** | Archivo producido por una tarea o **aportado** desde fuera. Se identifica por nombre lógico (`predica.srt`, `plan_camaras.json`) y se resuelve a una ruta dentro del proyecto. | disco + registro |
-| **Registro** | Por artefacto: hash del contenido, huella con la que se produjo, quién lo produjo (tarea, humano, redactor), cuándo, y si está **aprobado** (con el hash aprobado). | `.kerigma/estado.sqlite` |
-| **Corrida** | Una ejecución de una tarea: inicio, fin, resultado, log, progreso. | `.kerigma/estado.sqlite` + `.kerigma/logs/` |
+| **Registro** | Por artefacto: hash del contenido, huella con la que se produjo, quién lo produjo (tarea, humano, redactor), cuándo, y si está **aprobado** (con el hash aprobado). | `.lychnia/estado.sqlite` |
+| **Corrida** | Una ejecución de una tarea: inicio, fin, resultado, log, progreso. | `.lychnia/estado.sqlite` + `.lychnia/logs/` |
 | **Capacidades** | Lo que puede este equipo: encoders probados, GPU y su vendor, RAM, hilos, modelos presentes, internet. | memoria, se recalcula al arrancar y a pedido |
 
 ### 4.1 Estado de una tarea (derivado, no almacenado)
@@ -97,12 +97,12 @@ Se calcula al vuelo comparando registro, huellas y archivos en disco:
 - `aprobacion_caduca`: aprobada, pero cambió una entrada aguas arriba. **No se borra la
   aprobación ni se regenera**; se avisa.
 
-El tablero (`kerigma estado`, `GET /proyectos/{id}/estado`) es la lista de tareas con su
+El tablero (`lychnia estado`, `GET /proyectos/{id}/estado`) es la lista de tareas con su
 estado y la acción sugerida, equivalente a `make estado` de hoy.
 
 ## 5. El grafo de tareas
 
-Traducción del Makefile. Cada fila es una clase en `kerigma/tareas/`.
+Traducción del Makefile. Cada fila es una clase en `lychnia/tareas/`.
 
 | Tarea | Entradas | Salidas | Huella | Recurso | Gate | Notas |
 |---|---|---|---|---|---|---|
@@ -164,7 +164,7 @@ Hash de archivos chicos (TOML, SRT, JSON, ASS): SHA-256 completo.
 
 ### 6.2 Estado
 
-SQLite en `<proyecto>/.kerigma/estado.sqlite` (stdlib `sqlite3`, WAL). Tablas:
+SQLite en `<proyecto>/.lychnia/estado.sqlite` (stdlib `sqlite3`, WAL). Tablas:
 `artefactos` (nombre, ruta, hash, huella, productor, aprobado_hash, aprobado_por,
 aprobado_en, editado), `corridas` (tarea, inicio, fin, estado, error, limite_master, log),
 `eventos` (corrida, t, tipo, carga). Se puede borrar sin perder trabajo: el Motor lo
@@ -237,16 +237,16 @@ WS   /eventos?proyecto=…                  flujo de eventos (§6.5)
 Espejo de la API con Typer, en español, misma semántica que los targets de hoy:
 
 ```
-kerigma servir                              # arranca el Motor (lo usa Tauri)
-kerigma capacidades
-kerigma nuevo 2026-09-06 titulo-corto       # crea el proyecto desde la plantilla
-kerigma estado  [-p <proyecto>]
-kerigma config  [-p …] [seccion.campo valor]
-kerigma ejecutar preparar|plan|gate_a|video|contenido|entrega|<tarea> [-p …] [--limite 700]
-kerigma aportar callouts.toml ruta/al/archivo
-kerigma aprobar plan_camaras.json | callouts.ass | muestra.mp4
-kerigma asistente sincronia.offset_pantalla --ref … --test … --crop … --t 96
-kerigma log <corrida> [--seguir]
+lychnia servir                              # arranca el Motor (lo usa Tauri)
+lychnia capacidades
+lychnia nuevo 2026-09-06 titulo-corto       # crea el proyecto desde la plantilla
+lychnia estado  [-p <proyecto>]
+lychnia config  [-p …] [seccion.campo valor]
+lychnia ejecutar preparar|plan|gate_a|video|contenido|entrega|<tarea> [-p …] [--limite 700]
+lychnia aportar callouts.toml ruta/al/archivo
+lychnia aprobar plan_camaras.json | callouts.ass | muestra.mp4
+lychnia asistente sincronia.offset_pantalla --ref … --test … --crop … --t 96
+lychnia log <corrida> [--seguir]
 ```
 
 `-p` toma la carpeta actual si es un proyecto. La CLI sin Motor corriendo lo arranca en
@@ -278,8 +278,8 @@ documentación para el operador). Derivados como hoy.
 
 ### 8.2 Configuración del Motor (por usuario)
 
-`<datos>/config.toml` (ruta por `platformdirs`: `~/.local/share/kerigma` en Linux,
-`%LOCALAPPDATA%\kerigma` en Windows, `~/Library/Application Support/kerigma` en macOS):
+`<datos>/config.toml` (ruta por `platformdirs`: `~/.local/share/lychnia` en Linux,
+`%LOCALAPPDATA%\lychnia` en Windows, `~/Library/Application Support/lychnia` en macOS):
 raíz de proyectos, carpeta de modelos, encoder forzado (`HW_ENCODER`), hilos, transcriptor
 preferido, ruta a ffmpeg si no está en PATH.
 
@@ -294,13 +294,13 @@ sub-proyecto 2, la elección de modelo del Redactor.
 
 ## 9. Migración de los scripts
 
-Reglas para pasar cada script de `recursos/scripts/pipeline/` a un módulo de `kerigma`:
+Reglas para pasar cada script de `recursos/scripts/pipeline/` a un módulo de `lychnia`:
 
 1. Sin estado global al importar: fuera `CFG = Config(...)`, `CUES = parse()`, `_find_fonts()`
    subiendo directorios. Todo entra por parámetros (`config`, `rutas`, `fuentes`).
 2. Sin `os.chdir` ni `sys.path.insert`. Las rutas para filtros de ffmpeg pasan por una
    función `ruta_filtro(p)` que devuelve una ruta escapada válida en los tres sistemas
-   (hoy se resuelve con `relpath` desde la raíz del repo; en Kerigma no hay raíz del repo
+   (hoy se resuelve con `relpath` desde la raíz del repo; en Lychnia no hay raíz del repo
    en tiempo de ejecución).
 3. Sin `print` como salida: `ctx.log()` y valores de retorno tipados.
 4. Sin `sys.exit` ni `assert`: excepciones `ErrorDeValidacion(campo, mensaje, sugerencia)`
@@ -309,7 +309,7 @@ Reglas para pasar cada script de `recursos/scripts/pipeline/` a un módulo de `k
    plan debe dar los mismos 87 planos y `gen_callouts` el mismo `.ass` byte a byte.
 6. `generar_miniatura` deja de ser un script por prédica: textos desde `[miniatura]`.
 7. Las fuentes de marca (`fonts/` para libass, `fonts-portada/` para PIL) y la plantilla de
-   `proyecto.toml` e `INFO.md` viajan dentro del paquete (`kerigma/recursos/`).
+   `proyecto.toml` e `INFO.md` viajan dentro del paquete (`lychnia/recursos/`).
 
 Mapa script → módulo: `cfg.py` → `proyecto/config.py`; `srt_util.py` → `texto/srt.py`;
 `estilo_callouts.py` → `texto/estilo_ass.py`; `gen_callouts.py` → `tareas/callouts.py` +
@@ -386,6 +386,6 @@ capacidades e internet llega con el sub-proyecto 2.
 |---|---|
 | Migrar 20 scripts introduce regresiones sutiles de tiempo | Golden tests byte a byte antes de tocar lógica; migrar uno por uno |
 | Rutas y filtros de ffmpeg en Windows (`C:\`, `:` en `subtitles=`) | `ruta_filtro` con pruebas unitarias por SO; ya resuelto una vez en el repo original (docs 17 §4.6) |
-| Un proyecto viejo sin `.kerigma/` ni registro | Reconstrucción desde disco; estado «sin registro» hasta la primera corrida |
+| Un proyecto viejo sin `.lychnia/` ni registro | Reconstrucción desde disco; estado «sin registro» hasta la primera corrida |
 | SQLite bloqueado por dos procesos | Un solo Motor por usuario (§7.1); WAL |
 | El operador edita `proyecto.toml` mientras corre una tarea | La tarea trabaja con la config capturada al arrancar; el cambio dispara `desactualizada` al terminar |
