@@ -30,6 +30,7 @@ lychnia/
 │   ├── CONTEXT.md                 # where it comes from, what it produces, hard rules, decisions
 │   ├── CURRENT-PIPELINE.md        # the pipeline today: scripts, proyecto.toml, Makefile graph
 │   ├── JOURNAL.md                 # memory between sessions
+│   ├── GLOSSARY.md                # Spanish (original pipeline) to English (Lychnia) terms
 │   ├── spikes/2026-09-03-feasibility.md      # local LLM, packaging, RVR1960 license
 │   ├── abs-rvr1960-permission-request.md     # draft email to American Bible Society
 │   └── superpowers/specs/
