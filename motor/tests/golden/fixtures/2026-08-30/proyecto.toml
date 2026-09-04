@@ -1,0 +1,181 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  EJEMPLO REAL — proyecto.toml de la prédica 2026-08-30 «Gracia que produce
+#  excelencia» (Génesis 8). Con esta config, `make plan` reproduce plano por plano
+#  los 87 planos aprobados en su Gate A (verificado 2026-09-03). Sirve de referencia
+#  para llenar el de una prédica nueva; la plantilla vacía está en
+#  _plantilla-proyecto/proyecto.toml.
+# ═══════════════════════════════════════════════════════════════════════════
+
+[meta]                              # se escribe UNA vez; miniatura, blog y metadata lo leen
+fecha = "2026-08-30"   # AAAA-MM-DD (make init lo toma del nombre de la carpeta)
+slug = "gracia-que-produce-excelencia"   # kebab-case (idem)
+titulo   = "Gracia que produce excelencia"                       # título de la prédica (blog/web)
+pasaje   = "Génesis 8"                       # p. ej. "Génesis 8"
+pastor   = "Américo Ulabarry"                       # nombre completo, bien escrito (lección «Tamayo», 2026-08-23)
+autor_id = "seniorPastor"                       # id en authors.ts de la web: seniorPastor | associatePastor | guestSpeaker
+
+[fuentes]                           # rutas explícitas, relativas a esta carpeta
+maestro = "ENTREGA/audio/2026-08-30 09-41-53.mkv"   # ENTREGA/audio/<archivo>  (el audio bueno; su video es el programa de OBS)
+cam_a = "ENTREGA/cam-panoramica/2026-08-30_09-41-53_Panoramica.mkv"   # ENTREGA/cam-panoramica/<archivo>
+cam_b = "ENTREGA/cam-pastor/2026-08-30_09-41-53_Pastor.mkv"   # ENTREGA/cam-pastor/<archivo>  (vacío si no hubo cámara del pastor)
+
+[sync]                              # t_camara = t_maestro + off   (ver 3-guion/sincronia.md)
+off_a = -0.333
+off_b = -0.600
+audio_delay_ms = 0                  # retrasar el audio N ms (20 en la prédica del 2026-07-19); ≥ 0
+
+[corte]                             # decisión del Gate A, en segundos de MAESTRO
+entrada = 557.5                       # dónde arranca el video final
+salida  = 5242.5                       # dónde termina
+
+[video]                             # filtros por cámara de la Fase 1 (opcional; estos son los default)
+# vf_a = "scale=1920:1080:flags=bicubic,setsar=1"
+# vf_b = "scale=1920:1080:flags=bicubic,unsharp=5:5:0.3,setsar=1"
+# Cam B 720p → "scale=1920:1080:flags=lanczos,unsharp=5:5:0.4,setsar=1"  (2026-07-05)
+# Cam B invertida → anteponer "hflip,vflip,"                              (2026-07-12)
+
+[audio]                             # las tres perillas de la cadena de voz (la cadena vive en cfg.py)
+mezcla = "dual-mono"                # dual-mono | izquierdo | derecho  (medir L−R antes de decidir)
+lufs   = -15                        # objetivo de loudnorm (−16 limpio > −14 distorsionado, docs/14 §C)
+
+[gate_b]                            # clip de muestra: un tramo con cambio de cámara + callouts
+inicio   = 3021                      # segundo de maestro
+duracion = 65
+
+# ── shorts 9:16 (docs/08). Entradas/salidas imantadas a silencios reales; el FIN
+#    se elige para que remate en la frase fuerte. Mirar el último cuadro de cada uno.
+# [[shorts]]
+# id     = "s1-logico-o-biblico"
+# ini    = 3013.29
+# fin    = 3055.30
+# clave  = "bíblica"                # palabra en dorado
+# titulo = "Noé podía bajarse del arca. No se bajó."
+
+# Texto de una cue forzado a mano, por posición ("-1" = última, "0" = primera):
+# [shorts_overrides."s3-dios-en-la-lluvia"]
+# "-1" = "A Dios en medio de la lluvia aprende a ver a Dios en medio del desastre"
+
+# ── plan de cámaras: fases que alimentan a planear_camaras.py (Gate A). Cada fase
+#    lleva la cámara del plano largo, su duración y la del plano de descanso; el
+#    planificador imanta cada corte al silencio más largo cercano y escribe
+#    3-guion/plan_camaras.json (que es lo que se aprueba).
+[plan]
+cierre_a = 26.0                     # últimos segundos en panorámica
+# [[plan.fases]]
+# t_ini = 557.5
+# t_fin = 570.0
+# cam = "A"                         # cámara del plano largo
+# dur_larga = 12.5
+# dur_descanso = 0.0                # 0 = sin descansos (un solo plano)
+# nota = "establecimiento: la sala mientras anuncia el pasaje"
+
+[[shorts]]
+id = "s1-logico-o-biblico"
+ini = 3013.29
+fin = 3055.3
+clave = "bíblica"
+titulo = "Noé podía bajarse del arca. No se bajó."
+
+[[shorts]]
+id = "s2-espera-su-voz"
+ini = 3563.09
+fin = 3593.69
+clave = "voz"
+titulo = "No supongas. No intuyas."
+
+[[shorts]]
+id = "s3-dios-en-la-lluvia"
+ini = 1332.13
+fin = 1370.6
+clave = "lluvia"
+titulo = "Dios se acordó de ti, y afuera sigue lloviendo"
+
+[[shorts]]
+id = "s4-corazon-sano"
+ini = 4747.9
+fin = 4783.45
+clave = "sano"
+titulo = "Jesús le lavó los pies a Judas"
+
+[[shorts]]
+id = "s5-ayudas-que-lastiman"
+ini = 3928.65
+fin = 3971.15
+clave = "lastiman"
+titulo = "Hay ayudas que hacen daño"
+
+[shorts_overrides."s3-dios-en-la-lluvia"]
+"-1" = "A Dios en medio de la lluvia aprende a ver a Dios en medio del desastre"
+
+[[plan.fases]]
+t_ini = 557.5
+t_fin = 570.0
+cam = "A"
+dur_larga = 12.5
+dur_descanso = 0.0
+nota = "establecimiento: la sala mientras anuncia «el 8 de Genesis»"
+
+[[plan.fases]]
+t_ini = 570.0
+t_fin = 794.0
+cam = "B"
+dur_larga = 58.0
+dur_descanso = 14.0
+nota = "lectura de Genesis 8:1-22 (descansos A: la diapositiva del versiculo)"
+
+[[plan.fases]]
+t_ini = 794.0
+t_fin = 2124.0
+cam = "B"
+dur_larga = 86.0
+dur_descanso = 18.0
+nota = "introduccion (la gracia) + punto 1 (Dios a tu favor) + punto 2 (paciencia)"
+
+[[plan.fases]]
+t_ini = 2124.0
+t_fin = 2170.0
+cam = "A"
+dur_larga = 45.7
+dur_descanso = 0.0
+nota = "monta las fotos: luces abajo, la sala entera"
+
+[[plan.fases]]
+t_ini = 2170.0
+t_fin = 2660.0
+cam = "B"
+dur_larga = 95.0
+dur_descanso = 14.0
+nota = "las fotos del habitante de calle (Cam B encuadra pastor + pantalla)"
+
+[[plan.fases]]
+t_ini = 2660.0
+t_fin = 3596.0
+cam = "B"
+dur_larga = 86.0
+dur_descanso = 18.0
+nota = "punto 3: la respuesta (logico vs biblico)"
+
+[[plan.fases]]
+t_ini = 3596.0
+t_fin = 5043.0
+cam = "B"
+dur_larga = 86.0
+dur_descanso = 18.0
+nota = "punto 4: un proceso exitoso"
+
+[[plan.fases]]
+t_ini = 5043.0
+t_fin = 5115.0
+cam = "A"
+dur_larga = 71.7
+dur_descanso = 0.0
+nota = "«Pongase de pie»: la congregacion en pie"
+
+[[plan.fases]]
+t_ini = 5115.0
+t_fin = 5242.5
+cam = "B"
+dur_larga = 62.0
+dur_descanso = 20.0
+nota = "oracion final ligada a la predica (descansos A: la sala de pie)"
+
