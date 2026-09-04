@@ -36,8 +36,12 @@ opening this one.
   spike, engine-design spec, ABS permission request) and the Engine spec adopted English
   identifiers plus an i18n section.
 
-**Next step:** Andrés reviews the Engine spec. With his OK, `writing-plans` produces the
-implementation plan and work starts with the orchestrator and golden tests.
+- **Engine spec approved** by Andrés (2026-09-04, after the English rewrite). Glossary saved
+  as `docs/GLOSSARY.md`.
+
+**Next step:** open Claude Code in this repo and run the `superpowers:writing-plans` skill on
+`docs/superpowers/specs/2026-09-04-engine-design.md` to produce the implementation plan;
+then implement, starting with the orchestrator and the golden tests.
 
 **Pending outside code:**
 - Send the email to licensing@americanbible.org (with a copy to contacto@sbcol.org); the
