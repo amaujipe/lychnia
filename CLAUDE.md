@@ -8,11 +8,18 @@ with its own engine, a local API and a Tauri UI. See `README.md`.
 
 ## Read this when starting a session
 
-1. `docs/JOURNAL.md`: what was done last time and what comes next.
-2. `docs/CONTEXT.md`: origin, deliverables, hard rules, decisions taken.
-3. The spec of the sub-project in progress in `docs/superpowers/specs/`.
-4. If the detail of the current pipeline is needed: `docs/CURRENT-PIPELINE.md` and the source
+1. `docs/ROADMAP.md`: the whole application (four sub-projects), the state of every spec and
+   plan, what is still undesigned, and the pending work outside the code. The forest.
+2. `docs/JOURNAL.md`: what was done last time and what comes next.
+3. `docs/CONTEXT.md`: origin, deliverables, hard rules, decisions taken.
+4. The spec and plan of the sub-project in progress in `docs/superpowers/specs/` and
+   `docs/superpowers/plans/`.
+5. If the detail of the current pipeline is needed: `docs/CURRENT-PIPELINE.md` and the source
    code in `~/Repositorios/multimedia-iglesia-tunja/recursos/scripts/pipeline/` (versioned).
+
+**Closing a session, always three things:** `docs/JOURNAL.md` (what happened),
+`docs/ROADMAP.md` (how everything stands now), memory (pointer to both). Writing or approving a
+spec or a plan updates its ROADMAP row in the same commit.
 
 The Engram memory of the previous project is under the name `multimedia-iglesia-tunja`;
 search there with `all_projects=true` if context about decisions from June to September 2026

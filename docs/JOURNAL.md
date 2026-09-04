@@ -53,3 +53,32 @@ then implement, starting with the orchestrator and the golden tests.
 **Done in the same session, afterwards:** fixtures of the 2026-08-30 sermon versioned in
 `engine/tests/golden/fixtures/2026-08-30/` (TOMLs, SRT, TSV, silences, 87-shot plan and
 expected `.ass`; 652 KB) with Andrés's authorization.
+
+## 2026-09-04 (later): Engine implementation plan 01 written
+
+- Ran `superpowers:writing-plans` on the Engine spec. The spec is too large for a single
+  plan with concrete steps, so the Engine is split into **four plans**, each leaving the
+  suite green: 01 Foundation, 02 Text lane (golden tests: 87 shots, `callouts.ass`,
+  `final.srt`), 03 Media lane (ffmpeg tasks, smoke tests), 04 API + CLI.
+- **Plan 01 written:** `docs/superpowers/plans/2026-09-04-engine-01-foundation.md`
+  (15 tasks, TDD, ~80 unit tests, one golden config test). It covers package skeleton
+  (mise pin 3.12.14, venv + pip, hatchling), errors + i18n catalogs, frame grid and voice
+  chain, `project.toml` model with derived values and fingerprints, legacy adapter for the
+  Spanish fixtures, comment-preserving edits (tomlkit), hashing, layout/discovery/template,
+  SQLite store, artifact registry + task graph + Project, event bus + context, derived
+  statuses, three-lane scheduler, ffmpeg runner + `filter_path`, i18n static scan.
+- Decisions taken while planning, pending Andrés's confirmation (listed at the top of the
+  plan): four plans; two extra states `blocked` and `unregistered`; input prefixes
+  `source:` / `config:`; logical names `blog.src.mdx`, `blog.mdx`, `control_sheets.txt`,
+  `shorts.txt`; `[cut]` optional so a fresh project loads; golden comparisons normalize
+  CRLF (the fixtures were written on Windows); thread-based runner; quoted `filter_path`.
+- Environment facts: no `uv`/`poetry` on the machine; Python 3.12.14 installed via mise but
+  not pinned; ffmpeg 9.0.1; no numpy/Pillow/tomlkit outside a venv yet.
+
+- **`docs/ROADMAP.md` created** at Andrés's request: a living status board of the four
+  sub-projects (Engine, AI providers, Shell, Distribution), the state of every spec and plan,
+  what is still undesigned and the pending work outside the code. `CLAUDE.md` now lists it as
+  reading number 1 and fixes the closing ritual: JOURNAL + ROADMAP + memory.
+
+**Next step:** Andrés confirms the split and the decisions, then execute plan 01
+(`superpowers:subagent-driven-development` recommended) and write plan 02 afterwards.

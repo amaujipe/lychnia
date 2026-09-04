@@ -27,14 +27,16 @@ lychnia/
 ├── CLAUDE.md                      # how to work in this repo (for Claude Code)
 ├── README.md                      # this file
 ├── docs/
+│   ├── ROADMAP.md                 # ⭐ status board: the four sub-projects, every spec and plan, what is undesigned
 │   ├── CONTEXT.md                 # where it comes from, what it produces, hard rules, decisions
 │   ├── CURRENT-PIPELINE.md        # the pipeline today: scripts, proyecto.toml, Makefile graph
-│   ├── JOURNAL.md                 # memory between sessions
+│   ├── JOURNAL.md                 # memory between sessions (chronological)
 │   ├── GLOSSARY.md                # Spanish (original pipeline) to English (Lychnia) terms
 │   ├── spikes/2026-09-03-feasibility.md      # local LLM, packaging, RVR1960 license
 │   ├── abs-rvr1960-permission-request.md     # draft email to American Bible Society
-│   └── superpowers/specs/
-│       └── 2026-09-04-engine-design.md       # ⭐ Engine spec (sub-project 1)
+│   └── superpowers/
+│       ├── specs/2026-09-04-engine-design.md            # Engine spec (sub-project 1)
+│       └── plans/2026-09-04-engine-01-foundation.md     # Engine plan 01 of 4
 ├── engine/                        # (next) Python package `lychnia`: orchestrator + API + tasks + brand resources
 └── app/                           # (later) Tauri + web UI
 ```
