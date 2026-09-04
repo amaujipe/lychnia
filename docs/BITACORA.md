@@ -28,9 +28,13 @@ este.
 plan de implementación y se arranca por el orquestador con golden tests.
 
 **Pendientes fuera de código:**
-- Escribir a licensing@americanbible.org (con copia a contacto@sbcol.org) pidiendo permiso
-  para copia offline de RVR1960 en una herramienta interna no comercial de la iglesia.
-- Copiar al repo las fixtures de 2026-08-30 para los golden tests (dos TOML de ejemplo, el
-  `predica.srt`, `plan_camaras.json` y `callouts.ass` de referencia). Los dos TOML ya están
-  versionados en el repo original; el SRT y los artefactos viven en `proyectos/` (fuera de
-  git allá): confirmar con Andrés que está bien versionarlos aquí como fixtures de prueba.
+- Enviar el correo a licensing@americanbible.org (con copia a contacto@sbcol.org); el
+  borrador en inglés y español está en `docs/correo-abs-rvr1960.md`, faltan los datos entre
+  corchetes.
+- Elegir el nombre definitivo del proyecto: «Kerigma» tiene colisiones con apps y webs
+  existentes; hay una lista de candidatos verificados en curso. Al elegirlo: renombrar la
+  carpeta del repo, el paquete Python y reemplazar el nombre en los docs.
+
+**Hecho en la misma sesión, después:** fixtures de la prédica 2026-08-30 versionadas en
+`motor/tests/golden/fixtures/2026-08-30/` (TOMLs, SRT, TSV, silencios, plan de 87 planos y
+`.ass` esperados; 652 KB) con autorización de Andrés.

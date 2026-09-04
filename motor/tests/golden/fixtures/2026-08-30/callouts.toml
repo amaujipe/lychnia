@@ -1,0 +1,311 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  EJEMPLO REAL — callouts.toml de la prédica 2026-08-30 «Gracia que produce
+#  excelencia» (Génesis 8). Convertido 1:1 del gen_callouts_2026-08-30.py original;
+#  gen_callouts.py genera con él exactamente el mismo callouts.ass (verificado).
+#  Reglas: docs/18. Texto RVR1960 verificado en Bible Gateway, nunca de la transcripción.
+#  Anclas: frases del SRT normalizadas (minúsculas, sin tildes); `after` = segundo
+#  mínimo para desambiguar; `interpolar` = posición dentro de la cue (find_in).
+# ═══════════════════════════════════════════════════════════════════════════
+version = "RVR1960"
+
+[versiculos]                        # texto canónico, una vez por referencia
+"GÉNESIS 8:1" = "Y se acordó Dios de Noé, y de todos los animales, y de todas las bestias que estaban con él en el arca; e hizo pasar Dios un viento sobre la tierra, y disminuyeron las aguas."
+"GÉNESIS 8:2" = "Y se cerraron las fuentes del abismo y las cataratas de los cielos; y la lluvia de los cielos fue detenida."
+"GÉNESIS 8:3" = "Y las aguas decrecían gradualmente de sobre la tierra; y se retiraron las aguas al cabo de ciento cincuenta días."
+"GÉNESIS 8:4" = "Y reposó el arca en el mes séptimo, a los diecisiete días del mes, sobre los montes de Ararat."
+"GÉNESIS 8:5" = "Y las aguas fueron decreciendo hasta el mes décimo; en el décimo, al primero del mes, se descubrieron las cimas de los montes."
+"GÉNESIS 8:6" = "Sucedió que al cabo de cuarenta días abrió Noé la ventana del arca que había hecho,"
+"GÉNESIS 8:7" = "y envió un cuervo, el cual salió, y estuvo yendo y volviendo hasta que las aguas se secaron sobre la tierra."
+"GÉNESIS 8:8" = "Envió también de sí una paloma, para ver si las aguas se habían retirado de sobre la faz de la tierra."
+"GÉNESIS 8:9" = "Y no halló la paloma donde sentar la planta de su pie, y volvió a él al arca, porque las aguas estaban aún sobre la faz de toda la tierra. Entonces él extendió su mano, y tomándola, la hizo entrar consigo en el arca."
+"GÉNESIS 8:10" = "Esperó aún otros siete días, y volvió a enviar la paloma fuera del arca."
+"GÉNESIS 8:11" = "Y la paloma volvió a él a la hora de la tarde; y he aquí que traía una hoja de olivo en el pico; y entendió Noé que las aguas se habían retirado de sobre la tierra."
+"GÉNESIS 8:12" = "Y esperó aún otros siete días, y envió la paloma, la cual no volvió ya más a él."
+"GÉNESIS 8:13" = "Y sucedió que en el año seiscientos uno de Noé, en el mes primero, el día primero del mes, las aguas se secaron sobre la tierra; y quitó Noé la cubierta del arca, y miró, y he aquí que la faz de la tierra estaba seca."
+"GÉNESIS 8:14" = "Y en el mes segundo, a los veintisiete días del mes, se secó la tierra."
+"GÉNESIS 8:15" = "Entonces habló Dios a Noé, diciendo:"
+"GÉNESIS 8:16" = "Sal del arca tú, y tu mujer, y tus hijos, y las mujeres de tus hijos contigo."
+"GÉNESIS 8:17" = "Todos los animales que están contigo de toda carne, de aves y de bestias y de todo reptil que se arrastra sobre la tierra, sacarás contigo; y vayan por la tierra, y fructifiquen y multiplíquense sobre la tierra."
+"GÉNESIS 8:18" = "Entonces salió Noé, y sus hijos, su mujer, y las mujeres de sus hijos con él."
+"GÉNESIS 8:19" = "Todos los animales, y todo reptil y toda ave, todo lo que se mueve sobre la tierra según sus especies, salieron del arca."
+"GÉNESIS 8:20" = "Y edificó Noé un altar a Jehová, y tomó de todo animal limpio y de toda ave limpia, y ofreció holocausto en el altar."
+"GÉNESIS 8:21" = "Y percibió Jehová olor grato; y dijo Jehová en su corazón: No volveré más a maldecir la tierra por causa del hombre; porque el intento del corazón del hombre es malo desde su juventud; ni volveré más a destruir todo ser viviente, como he hecho."
+"GÉNESIS 8:22" = "Mientras la tierra permanezca, no cesarán la sementera y la siega, el frío y el calor, el verano y el invierno, y el día y la noche."
+"ISAÍAS 49:14" = "Pero Sion dijo: Me dejó Jehová, y el Señor se olvidó de mí."
+"ISAÍAS 49:15" = "¿Se olvidará la mujer de lo que dio a luz, para dejar de compadecerse del hijo de su vientre? Aunque olvide ella, yo nunca me olvidaré de ti."
+"ISAÍAS 49:16" = "He aquí que en las palmas de las manos te tengo esculpida; delante de mí están siempre tus muros."
+"HECHOS 3:6" = "Mas Pedro dijo: No tengo plata ni oro, pero lo que tengo te doy; en el nombre de Jesucristo de Nazaret, levántate y anda."
+"MATEO 25:35-36" = "Porque tuve hambre, y me disteis de comer; tuve sed, y me disteis de beber; fui forastero, y me recogisteis; estuve desnudo, y me cubristeis; enfermo, y me visitasteis; en la cárcel, y vinisteis a mí."
+
+# ── 1) LECTURA CORRIDA — Génesis 8:1-22, verso por verso, ENCADENADA ─────────
+#    Whisper con VAD dejó cues de hasta 10 s con 2-3 versículos dentro → `interpolar`
+#    (find_in) estima el segundo por la posición del ancla en la cue.
+[[lecturas]]
+fin = 792.5                         # justo antes de «excelencia es nuestro título»
+interpolar = true
+versos = [
+  { ref = "GÉNESIS 8:1", ancla = "y se acordo dios de noe", after = 555 },
+  { ref = "GÉNESIS 8:2", ancla = "y se cerraron la fuente del abismo", after = 575 },
+  { ref = "GÉNESIS 8:3", ancla = "y las aguas decrecian gradualmente de sobre la tierra", after = 583 },
+  { ref = "GÉNESIS 8:4", ancla = "verso 4 y reposo el arca en el mes septimo", after = 590 },
+  { ref = "GÉNESIS 8:5", ancla = "y las aguas fueron decreciendo hasta el mes decimo", after = 603 },
+  { ref = "GÉNESIS 8:6", ancla = "sucedio que al cabo de 40 dias", after = 614 },
+  { ref = "GÉNESIS 8:7", ancla = "y envio un cuervo el cual salio", after = 620 },
+  { ref = "GÉNESIS 8:8", ancla = "envio tambien de si una paloma", after = 629 },
+  { ref = "GÉNESIS 8:9", ancla = "y no hallo la paloma donde sentar la planta", after = 636 },
+  { ref = "GÉNESIS 8:10", ancla = "versiculo 10", after = 650 },
+  { ref = "GÉNESIS 8:11", ancla = "y la paloma volvio a el a la hora de la tarde", after = 656 },
+  { ref = "GÉNESIS 8:12", ancla = "y espero aun otros siete dias y envio la paloma", after = 670 },
+  { ref = "GÉNESIS 8:13", ancla = "y sucedio que en el ano 601 de noe", after = 676 },
+  { ref = "GÉNESIS 8:14", ancla = "seca 14", after = 690 },
+  { ref = "GÉNESIS 8:15", ancla = "entonces hablo dios a noe", after = 698 },
+  { ref = "GÉNESIS 8:16", ancla = "sal del arca tu", after = 704 },
+  { ref = "GÉNESIS 8:17", ancla = "todos los animales que estan contigo", after = 712 },
+  { ref = "GÉNESIS 8:18", ancla = "entonces salio noe y sus hijas", after = 722 },
+  { ref = "GÉNESIS 8:19", ancla = "todos los animales y todo reptil y toda ave", after = 733 },
+  { ref = "GÉNESIS 8:20", ancla = "edifico noe un altar a jehova", after = 740 },
+  { ref = "GÉNESIS 8:21", ancla = "y percibio jehova olor", after = 750 },
+  { ref = "GÉNESIS 8:22", ancla = "y el 22 dice mientras la tierra permanezca", after = 770 },
+]
+
+# ── 2) RELECTURAS DELIBERADAS durante la exposición (docs/18 §1) ─────────────
+
+[[callouts]]
+tipo = "verso"
+ref = "GÉNESIS 8:1"
+ancla = "8 1 de genesis y se acordo dios de noe"
+fin = 1085
+
+
+[[callouts]]
+tipo = "verso"
+ref = "GÉNESIS 8:2"
+ancla = "y se cerraron las fuentes del abismo"
+after = 1110
+fin = 1133.5
+
+# Isaías 49: la respuesta de Dios a «me dejó Jehová»
+
+[[callouts]]
+tipo = "verso"
+ref = "ISAÍAS 49:14"
+ancla = "49 14 pero sion dijo me dejo jehova"
+fin = 1645
+
+
+[[callouts]]
+tipo = "verso"
+ref = "ISAÍAS 49:15"
+ancla = "se olvidara la mujer de lo que dio a luz"
+after = 1820
+interpolar = true
+fin = 1845.28
+
+
+[[callouts]]
+tipo = "verso"
+ref = "ISAÍAS 49:16"
+ancla = "he aqui que en las palmas de la mano te tengo esculpida"
+after = 1845
+interpolar = true
+fin = 1867.5
+
+# Punto 2 — paciencia: el v3 y su «gradualmente»
+
+[[callouts]]
+tipo = "verso"
+ref = "GÉNESIS 8:3"
+ancla = "genesis 8 versiculo 3"
+after = 1896
+interpolar = true
+fin = 1979
+
+
+[[callouts]]
+tipo = "verso"
+ref = "GÉNESIS 8:3"
+ancla = "y las aguas decrecian gradualmente"
+after = 2620
+interpolar = true
+fin = 2660
+
+# Punto 3 — la respuesta: vv. 11-13
+
+[[callouts]]
+tipo = "verso"
+ref = "GÉNESIS 8:11"
+ancla = "y la paloma volvio a el a la hora de la tarde"
+after = 2698
+fin = 2740
+
+
+[[callouts]]
+tipo = "verso"
+ref = "GÉNESIS 8:12"
+ancla = "y espero aun otros siete dias"
+after = 2905
+fin = 2914.6
+
+
+[[callouts]]
+tipo = "verso"
+ref = "GÉNESIS 8:13"
+ancla = "leamos el 13 que esta sabroso"
+fin = 2977
+
+# Punto 4 — un proceso exitoso: vv. 20-21
+
+[[callouts]]
+tipo = "verso"
+ref = "GÉNESIS 8:20"
+ancla = "y edifico noe un altar a jehova"
+after = 3625
+fin = 3700
+
+
+[[callouts]]
+tipo = "verso"
+ref = "GÉNESIS 8:21"
+ancla = "dame 21"
+fin = 4100
+
+
+[[callouts]]
+tipo = "verso"
+ref = "GÉNESIS 8:21"
+ancla = "y percibio jehova"
+after = 4218
+fin = 4265
+
+
+[[callouts]]
+tipo = "verso"
+ref = "GÉNESIS 8:20"
+ancla = "y edifico noe un altar a jehova"
+after = 4800
+fin = 4830
+
+
+# ── 3) CITAS EXTERNAS dichas TEXTUALMENTE → versículo (docs/18 §1) ───────────
+
+[[callouts]]
+tipo = "verso"
+ref = "HECHOS 3:6"
+ancla = "yo no tengo plata ni oro"
+after = 3920
+fin = 3960
+
+
+[[callouts]]
+tipo = "verso"
+ref = "MATEO 25:35-36"
+ancla = "tuve hambre y me diste"
+after = 2440
+fin = 2462
+
+
+# ── 4) LOS CUATRO PUNTOS DE LA PRÉDICA ────────────────────────────────────────
+
+[[callouts]]
+tipo = "punto"
+n = 1
+ancla = "lo primero se encuentra en genesis capitulo 8 versiculo 1"
+fin = 1033
+texto = "Dios está a tu favor"
+
+
+[[callouts]]
+tipo = "punto"
+n = 2
+ancla = "lo segundo que muestra el texto biblico es la palabra paciencia"
+fin = 1901.5
+texto = "Ten paciencia"
+
+
+[[callouts]]
+tipo = "punto"
+n = 3
+ancla = "la tercera palabra para hoy es la palabra respuesta"
+fin = 2698
+texto = "Tu respuesta"
+
+
+[[callouts]]
+tipo = "punto"
+n = 4
+ancla = "y lo cuarto es un proceso exitoso"
+fin = 3625
+texto = "Un proceso exitoso"
+
+
+# ── 5) FRASES CLAVE (pull-quotes) ──────────────────────────────────────────────
+
+[[callouts]]
+tipo = "frase"
+ancla = "dios no da gracia para que te sigas equivocando"
+fin = 990
+texto = "Dios no da gracia para que te sigas equivocando."
+
+
+[[callouts]]
+tipo = "frase"
+ancla = "iglesia aprende a ver"
+fin = 1390
+texto = "Aprende a ver a Dios en medio de la lluvia; aprende a ver a Dios en medio del desastre."
+
+
+[[callouts]]
+tipo = "frase"
+ancla = "en medio de tu desastre yo me sigo"
+fin = 1560
+texto = "En medio de tu desastre, yo me sigo acordando de ti."
+
+
+[[callouts]]
+tipo = "frase"
+ancla = "logica y hay gente que es biblica"
+fin = 3070
+texto = "Hay gente que es lógica y hay gente que es bíblica. Si a mí me dieran a escoger, me quedaría con la segunda."
+
+
+[[callouts]]
+tipo = "frase"
+ancla = "no supongas"
+after = 3565
+fin = 3600
+texto = "No supongas. No intuyas. No interpretes. Espera por su voz."
+
+
+[[callouts]]
+tipo = "frase"
+ancla = "las personas son mas importantes que el ladrillo"
+fin = 4020
+texto = "Las personas son más importantes que el ladrillo y el cemento."
+
+
+[[callouts]]
+tipo = "frase"
+ancla = "adora sin problema"
+fin = 4600
+texto = "El que está sano, después de un proceso difícil, adora sin problema."
+
+
+[[callouts]]
+tipo = "frase"
+ancla = "pero si son biblicas"
+fin = 5068
+texto = "Hay cosas que Dios te puede llegar a pedir que no entiendes y que no son lógicas, pero sí son bíblicas."
+
+
+# ── (referencia) otros tipos disponibles ──────────────────────────────────────
+# [[callouts]]                      # versículo a PANTALLA COMPLETA
+# tipo = "verso_full"  ref = "…"  ancla = "…"  fin = 0.0
+#
+# [[callouts]]                      # LISTA PROGRESIVA (conclusión en pasos, 2026-08-16)
+# tipo = "lista"
+# titulo = "CONCLUSIÓN"
+# fin = 4296.3
+# pasos = [
+#   { texto = "1 · Una zarza común disponible para un Dios extraordinario", ancla = "lo primero es que", after = 4262 },
+#   { texto = "2 · Arder sin consumirnos", ancla = "lo segundo es que", after = 4272 },
+# ]
