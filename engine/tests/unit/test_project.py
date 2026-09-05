@@ -8,6 +8,7 @@ def test_project_paths_config_and_store(make_project):
     assert p.id == "2026-09-06_prueba"
     assert p.config.duration == 100.0
     assert p.artifact_path("x.txt") == root / "work" / "x.txt"
+    assert p.artifact_path("np.txt") == root / "work" / "np.txt"
     assert p.store.get_artifact("x.txt") is None
     assert (root / ".lychnia" / "state.sqlite").exists()
 
