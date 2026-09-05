@@ -28,11 +28,11 @@ class Project:
 
     @property
     def config(self) -> ProjectConfig:
-        if self._config is None:
-            with self._lock:
-                if self._config is None:
-                    self._config = load_config(self.paths.config_file, self.master_limit)
-        return self._config
+        with self._lock:
+            if self._config is None:
+                self._config = load_config(self.paths.config_file, self.master_limit)
+            cfg = self._config
+        return cfg
 
     def reload(self) -> None:
         with self._lock:
@@ -40,11 +40,11 @@ class Project:
 
     @property
     def store(self) -> StateStore:
-        if self._store is None:
-            with self._lock:
-                if self._store is None:
-                    self._store = StateStore(self.paths.state_db)
-        return self._store
+        with self._lock:
+            if self._store is None:
+                self._store = StateStore(self.paths.state_db)
+            st = self._store
+        return st
 
     # ── artifacts ────────────────────────────────────────────────────────
     def artifact_spec(self, name: str) -> ArtifactSpec:
