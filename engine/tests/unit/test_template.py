@@ -22,6 +22,8 @@ def test_rendered_template_is_localized():
     en = render_project_toml("2026-09-06", "p", {"master": "", "cam_a": "", "cam_b": ""}, lang="en")
     assert es != en
     assert tomllib.loads(es) == tomllib.loads(en)   # same data, different comments
+    assert "palabra" not in en
+    assert "establishing shot" not in es
 
 
 def test_create_project_builds_folder_and_discovers_sources(tmp_path):

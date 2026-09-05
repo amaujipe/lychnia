@@ -66,15 +66,17 @@ def render_project_toml(date: str, slug: str, sources: dict[str, str], lang: str
 
     doc.add(tomlkit.nl())
     for line in [t("template.shorts", lang), "[[shorts]]", 'id      = "s1-slug"', "start   = 3013.29",
-                 "end     = 3055.30", 'keyword = "palabra"', 'title   = "Titulo gancho"', "",
+                 "end     = 3055.30", f'keyword = "{t("template.example_short_keyword", lang)}"',
+                 f'title   = "{t("template.example_short_title", lang)}"', "",
                  t("template.shorts_overrides", lang), '[shorts_overrides."s1-slug"]',
-                 '"-1" = "texto forzado de la ultima cue"']:
+                 f'"-1" = "{t("template.example_override_text", lang)}"']:
         doc.add(tomlkit.comment(line) if line else tomlkit.nl())
 
     plan = _table("template.plan", lang, closing_a=26.0)
     _annotate(plan, lang, closing_a="template.plan_closing_a")
     for line in ["[[plan.phases]]", "start     = 557.5", "end       = 570.0", 'cam       = "A"',
-                 "long_shot = 12.5", "rest_shot = 0.0", 'note      = "establishing shot"']:
+                 "long_shot = 12.5", "rest_shot = 0.0",
+                 f'note      = "{t("template.example_phase_note", lang)}"']:
         plan.add(tomlkit.comment(line))
     doc.add("plan", plan)
 

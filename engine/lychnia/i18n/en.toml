@@ -72,3 +72,7 @@ plan = "camera plan (Gate A): phases with the long-shot camera, its duration and
 plan_closing_a = "last seconds on the wide shot"
 thumbnail = "thumbnail texts; never repeats the video title"
 publishing = "written by the operator when publishing (uploading is out of v1)"
+example_short_keyword = "keyword"
+example_short_title = "Hook title of the short"
+example_override_text = "forced text of the last cue"
+example_phase_note = "establishing shot: the hall while the passage is announced"
