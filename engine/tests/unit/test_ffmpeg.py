@@ -1,3 +1,4 @@
+import os
 import sys
 import threading
 import time
@@ -68,6 +69,37 @@ def test_cancel_terminates_the_process(tmp_path):
     with pytest.raises(Cancelled):
         run_ffmpeg([], cancel=cancel, ffmpeg_cmd=_fake(tmp_path, FAKE_FOREVER))
     assert time.time() - t0 < 4
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="signal 0 probe is POSIX-only")
+def test_progress_callback_exception_terminates_the_child(tmp_path):
+    pid_file = tmp_path / "pid.txt"
+    code = f"""import os, time
+with open({str(pid_file)!r}, "w") as f:
+    f.write(str(os.getpid()))
+while True:
+    print("out_time_us=1000000", flush=True)
+    time.sleep(0.02)
+"""
+
+    def boom(pct):
+        raise ValueError("cb boom")
+
+    t0 = time.time()
+    with pytest.raises(ValueError):
+        run_ffmpeg([], total_s=10.0, on_progress=boom, ffmpeg_cmd=_fake(tmp_path, code))
+    assert time.time() - t0 < 4
+
+    pid = int(pid_file.read_text().strip())
+    deadline = time.time() + 2
+    while time.time() < deadline:
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            break
+        time.sleep(0.05)
+    with pytest.raises(ProcessLookupError):
+        os.kill(pid, 0)
 
 
 def test_missing_binary():
