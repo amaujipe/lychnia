@@ -44,10 +44,11 @@ class Scheduler:
         self.bus = bus
         self.capabilities = capabilities or {}
         self.lang = lang
-        self.lanes = {res: threading.Semaphore(n) for res, n in (lanes or LANE_CAPACITY).items()}
+        self.lanes = {res: threading.Semaphore(n) for res, n in (LANE_CAPACITY | (lanes or {})).items()}
         self._active: dict[int, _Active] = {}
         self._lock = threading.Lock()
         self._shutting_down = False
+        self.project.store.reclaim_interrupted_runs()
 
     # ── public API ───────────────────────────────────────────────────────
     def run_target(self, target: str, wait: bool = False) -> RunReport:
@@ -183,6 +184,7 @@ class Scheduler:
             thread = threading.Thread(target=work, name=f"lychnia-{task.name}-{run_id}", daemon=True)
             with self._lock:
                 self._active[run_id] = _Active(task, cancel, thread)
+            thread.start()
         except Exception as exc:  # noqa: BLE001 - a launch-setup failure must still finish the run
             store.finish_run(run_id, "failed", error=f"{type(exc).__name__}: {exc}")
             self.bus.publish("task.failed", task=task.name, run=run_id, reason="error",
@@ -190,5 +192,4 @@ class Scheduler:
             with self._lock:
                 self._active.pop(run_id, None)
             raise
-        thread.start()
         return run_id

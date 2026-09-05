@@ -158,6 +158,17 @@ def test_failure_is_recorded_with_log(make_project):
     assert derive_status(graph.tasks["boom"], graph, project, project.store).state is State.FAILED
 
 
+def test_reclaims_interrupted_run_at_startup(make_project):
+    project, graph, bus, q = _setup(make_project, [MakeX()])
+    stale_id = project.store.start_run("make_x")
+    project.store.set_run_status(stale_id, "running")
+    sched = Scheduler(graph, project, bus)
+    assert project.store.get_run(stale_id).status == "failed"
+    report = sched.run_target("make_x", wait=True)
+    assert project.artifact_path("x.txt").exists()
+    assert project.store.latest_run("make_x").status == "done"
+
+
 def test_two_overlapping_targets_both_complete(make_project):
     project, graph, bus, q = _setup(make_project, [Slow(), SlowB()])
     graph.targets = {"a": ("slow_a",), "b": ("slow_b",)}

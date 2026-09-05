@@ -5,7 +5,7 @@ from pathlib import Path
 from lychnia import i18n
 
 PACKAGE = Path(i18n.__file__).resolve().parents[1]
-KEY_RE = re.compile(r"""["'](?:validation|status|action|task|template)\.[a-z0-9_]+["']""")
+KEY_RE = re.compile(r"""["'](?:validation|status|action|task|template)\.[a-z0-9_]+(?=["'|])""")
 # accented lowercase words inside string literals are the fingerprint of inlined Spanish prose
 SPANISH_RE = re.compile(r"""["'][^"'\n]*\b[a-z]*[áéíóúñ][a-z]*\b[^"'\n]*["']""")
 ALLOWED_SPANISH_FILES = set()   # add a relative path here only with a comment explaining why
@@ -45,6 +45,16 @@ def test_dynamic_status_keys_exist():
         catalog = i18n.load_messages(lang)
         for state in State:
             assert f"status.{state.value}" in catalog, (lang, state)
+
+
+def test_no_dead_catalog_keys():
+    """Every key in the catalog is either used in code or a dynamic status key."""
+    from lychnia.orchestrator.status import State
+    used = _used_keys()
+    dynamic = {f"status.{s.value}" for s in State}
+    catalog = i18n.load_messages("es")
+    dead = sorted(set(catalog) - used - dynamic)
+    assert not dead, f"catalog keys not referenced anywhere (used or dynamic): {dead}"
 
 
 def test_no_inlined_spanish_in_code():

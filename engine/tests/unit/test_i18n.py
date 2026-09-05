@@ -21,6 +21,11 @@ def test_env_var_selects_language(monkeypatch):
     assert i18n.t("validation.cut_end_before_start") == i18n.load_messages("en")["validation.cut_end_before_start"]
 
 
+def test_unknown_env_language_falls_back_to_default(monkeypatch):
+    monkeypatch.setenv("LYCHNIA_LANG", "xx")
+    assert i18n.current_language() == "es"
+
+
 def test_t_formats_params():
     msg = i18n.t("validation.missing_field", lang="en", field="cut.end")
     assert "cut.end" in msg

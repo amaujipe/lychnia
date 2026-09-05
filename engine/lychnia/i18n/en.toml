@@ -28,7 +28,6 @@ failed = "failed: {error}"
 awaiting_approval = "done; approval pending"
 approval_expired = "approved, but something changed afterwards: review it and approve again"
 unregistered = "exists on disk but is not registered; run the task to register it"
-cancelled = "cancelled"
 
 [action]
 run_task = "run: lychnia run {task}"
