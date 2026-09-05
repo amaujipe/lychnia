@@ -48,25 +48,32 @@ def run_ffmpeg(args: list[str], *, total_s: float | None = None,
     drainer = threading.Thread(target=drain_stderr, daemon=True)
     drainer.start()
 
-    for line in proc.stdout:
+    try:
+        for line in proc.stdout:
+            if cancel is not None and cancel.is_set():
+                _terminate(proc, kill_after_s)
+                drainer.join()
+                raise Cancelled()
+            kv = parse_progress_line(line)
+            if kv and kv[0] == "out_time_us" and on_progress is not None and total_s:
+                try:
+                    done_s = int(kv[1]) / 1_000_000
+                except ValueError:
+                    continue
+                on_progress(min(100.0, round(done_s / total_s * 100, 2)))
+        code = proc.wait()
+        drainer.join()
         if cancel is not None and cancel.is_set():
-            _terminate(proc, kill_after_s)
-            drainer.join()
             raise Cancelled()
-        kv = parse_progress_line(line)
-        if kv and kv[0] == "out_time_us" and on_progress is not None and total_s:
-            try:
-                done_s = int(kv[1]) / 1_000_000
-            except ValueError:
-                continue
-            on_progress(min(100.0, round(done_s / total_s * 100, 2)))
-    code = proc.wait()
-    drainer.join()
-    if cancel is not None and cancel.is_set():
-        raise Cancelled()
-    if code != 0:
-        raise TaskError("task.ffmpeg_failed", command=cmd, stderr_tail="\n".join(tail), code=code)
-    return FfmpegResult(cmd, "\n".join(tail))
+        if code != 0:
+            raise TaskError("task.ffmpeg_failed", command=cmd, stderr_tail="\n".join(tail), code=code)
+        return FfmpegResult(cmd, "\n".join(tail))
+    finally:
+        if proc.poll() is None:
+            _terminate(proc, kill_after_s)
+        drainer.join()
+        proc.stdout.close()
+        proc.stderr.close()
 
 
 def _terminate(proc: subprocess.Popen, kill_after_s: float) -> None:
