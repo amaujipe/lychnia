@@ -158,6 +158,43 @@ def test_failure_is_recorded_with_log(make_project):
     assert derive_status(graph.tasks["boom"], graph, project, project.store).state is State.FAILED
 
 
+def test_two_overlapping_targets_both_complete(make_project):
+    project, graph, bus, q = _setup(make_project, [Slow(), SlowB()])
+    graph.targets = {"a": ("slow_a",), "b": ("slow_b",)}
+    sched = Scheduler(graph, project, bus)
+    ra = sched.run_target("a")
+    rb = sched.run_target("b")
+    assert ra.wait(10) and rb.wait(10)
+    assert project.artifact_path("x.txt").exists() and project.artifact_path("y.txt").exists()
+
+
+def test_coordinator_exception_does_not_hang(make_project, monkeypatch):
+    project, graph, bus, q = _setup(make_project, [MakeX()])
+    sched = Scheduler(graph, project, bus)
+
+    def _boom(*args, **kwargs):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr("lychnia.orchestrator.scheduler.derive_status", _boom)
+    report = sched.run_target("make_x", wait=True)
+    assert report.wait(5)
+    assert report.error is not None and "boom" in report.error
+    assert report.started == []
+
+
+def test_shutdown_cancels_active_runs(make_project):
+    project, graph, bus, q = _setup(make_project, [Forever()])
+    sched = Scheduler(graph, project, bus)
+    report = sched.run_target("forever")
+    deadline = time.time() + 5
+    while not report.started and time.time() < deadline:
+        time.sleep(0.01)
+    assert report.started
+    sched.shutdown()
+    assert sched.active_runs() == []
+    assert project.store.get_run(report.started[0]).status == "cancelled"
+
+
 def _drain(q):
     out = []
     while not q.empty():
