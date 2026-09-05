@@ -9,7 +9,7 @@
 **States**, in order: `not started` → `brainstorm` → `spec draft` → `spec approved` →
 `plan NN written` → `plan NN executed` → `done`. A row can also carry `blocked: <why>`.
 
-**Last update:** 2026-09-04.
+**Last update:** 2026-09-04 (plan 01 executed).
 
 ## 1. The application in one look
 
@@ -18,7 +18,7 @@ Lychnia is four sub-projects, in this order (decided in the brainstorm of 2026-0
 
 | # | Sub-project | What it is | State | Where |
 |---|---|---|---|---|
-| 1 | **Engine** | Python process: orchestrator, tasks (ffmpeg, whisper, generators), local API on 127.0.0.1, CLI. The "backend". | `spec approved`, `plan 01 written` | spec `superpowers/specs/2026-09-04-engine-design.md`; plans `superpowers/plans/2026-09-04-engine-01-*.md` |
+| 1 | **Engine** | Python process: orchestrator, tasks (ffmpeg, whisper, generators), local API on 127.0.0.1, CLI. The "backend". | `spec approved`, `plan 01 executed`, `plan 02 next` | spec `superpowers/specs/2026-09-04-engine-design.md`; plans `superpowers/plans/2026-09-04-engine-01-*.md` |
 | 2 | **AI providers** | Writer (local Qwen3 by chunks, Claude API), Bible database, person detector, provider selection by capabilities and internet. Lives inside the Engine package. | `brainstorm` (decisions 2, 6, 8, 9 taken; interfaces defined in Engine spec §10) | no spec yet |
 | 3 | **Shell** | Tauri desktop app: one codebase for Windows, macOS, Linux. Starts the Engine as a sidecar; web UI consumes the API. Screens: project, board, Gate A, Gate B, delivery. | `brainstorm` (decision 3 taken) | no spec yet |
 | 4 | **Distribution** | PyInstaller per OS, `llama-server` as a separate binary, model bundle with manifest, USB import, Tauri installers, CI matrix. | `brainstorm` (decision 5 taken) | no spec yet |
@@ -31,8 +31,8 @@ The Engine spec is implemented through four plans. Each plan leaves the test sui
 
 | Plan | Scope | State | Golden / smoke evidence |
 |---|---|---|---|
-| 01 Foundation | package, i18n, errors, `project.toml` model + fingerprints, legacy fixture adapter, tomlkit edits, hashing, layout/discovery/template, SQLite state, artifacts/task/graph, events/context, derived statuses, scheduler, ffmpeg runner, `filter_path` | `plan 01 written` (2026-09-04), awaiting Andrés's confirmation of 8 planning decisions listed at the top of the plan | golden config test on the 2026-08-30 sermon |
-| 02 Text lane | `text/srt.py`, anchoring, `text/ass_style.py`, `text/callouts.py`; tasks `plan`, `callouts`, `subtitles`, `blog`, `init`; assistant `srt.search` | `not started` (scope defined in plan 01) | 87 shots; `callouts.ass` byte for byte (CRLF-normalized); `final.srt` |
+| 01 Foundation | package, i18n, errors, `project.toml` model + fingerprints, legacy fixture adapter, tomlkit edits, hashing, layout/discovery/template, SQLite state, artifacts/task/graph, events/context, derived statuses, scheduler, ffmpeg runner, `filter_path` | `plan 01 executed (2026-09-04)`: 15 tasks, subagent-driven, 104 tests passing | golden config test on the 2026-08-30 sermon |
+| 02 Text lane | `text/srt.py`, anchoring, `text/ass_style.py`, `text/callouts.py`; tasks `plan`, `callouts`, `subtitles`, `blog`, `init`; assistant `srt.search` | `next` (scope defined in plan 01) | 87 shots; `callouts.ass` byte for byte (CRLF-normalized); `final.srt` |
 | 03 Media lane | capabilities, encoders, tasks `transcribe` (faster-whisper), `camera_health`, `control_frames`, `segments`, `preview`, `render`, `shorts` + tracking, `thumbnail`; sync assistants; `WriterManual`, `BibleManual`, `DetectorMedian` | `not started` (scope defined in plan 01) | opt-in smoke with `MASTER_LIMIT=700` on `prueba-render` media; `filter_path` against real ffmpeg |
 | 04 API + CLI | FastAPI routes, WebSocket events, token file, Typer CLI, Engine config (`platformdirs`), package-wide i18n scan, minimal CI | `not started` (scope defined in plan 01) | API tests with `TestClient`: 401, `Origin` rejected, provide → approve → status |
 
@@ -44,6 +44,10 @@ they are not forgotten):
 - Default projects root `~/Lychnia/projects/` and `<data>/config.toml` (plan 04).
 - Capability detection: encoder probes, GPU vendor, RAM, models, internet (plan 03).
 - `INFO.md` templates in the Shell language (plan 01 ships es/en files).
+- Spec amended on 2026-09-04 after plan 01 (§6.5 scheduler.failed event, §5 silences path);
+  plan 04 owes a whole-section writer for [[shorts]] and [shorts_overrides] because
+  patch_config rejects them; plan 02 must declare config: inputs as leaf fields for
+  sections whose fields all have defaults (e.g. config:sync.offset_a, not config:sync).
 
 ## 3. Other sub-projects: what is already decided, what is open
 
@@ -94,7 +98,7 @@ mechanism, model manifest format, USB import UX, ffmpeg bundling per OS.
 | Confirm by hand at sic.gov.co that «Lychnia» is not a registered mark in Colombia | Andrés | pending |
 | Push the local commits to `github.com/amaujipe/lychnia` | Andrés | pending |
 | Which target machines exist for real (volunteer laptops, a PC with NVIDIA?) to size capability detection and defaults | Andrés | open |
-| Confirm the 8 planning decisions at the top of plan 01 and choose the execution mode | Andrés | open |
+| Confirm the 8 planning decisions at the top of plan 01 and choose the execution mode | Andrés | done (confirmed 2026-09-04; subagents) |
 
 ## 5. How to update this file
 

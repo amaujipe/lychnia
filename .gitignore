@@ -11,3 +11,6 @@ engine/.venv/
 # Claude Code: per-machine settings and hook state
 .claude/settings.local.json
 .claude/hooks-state/
+
+# CodeGraph index (per worktree)
+.codegraph/

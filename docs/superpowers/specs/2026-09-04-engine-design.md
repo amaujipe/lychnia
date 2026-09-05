@@ -1,6 +1,7 @@
 # Spec: Lychnia Engine (sub-project 1)
 
 **Date:** 2026-09-04 · **Status:** Draft for review by Andrés
+**Amended 2026-09-04** after plan 01: `scheduler.failed` event (§6.5); `silences.raw.txt` path (§5).
 **Prior context:** [CONTEXT.md](../../CONTEXT.md) (decisions), [CURRENT-PIPELINE.md](../../CURRENT-PIPELINE.md)
 (what gets migrated), [spikes](../../spikes/2026-09-03-feasibility.md) (feasibility).
 
@@ -123,7 +124,7 @@ Translation of the `Makefile`. Each row is a class in `lychnia/tasks/`.
 | `init` | `input/` | `project.toml` | none | light | none | Discovers sources; fills date and slug; never touches a TOML that already has sources. |
 | `transcribe` | `sources.master` | `transcript.srt`, `.tsv`, `.txt`, `.vtt`, `.json` | master hash | `cpu_heavy` (faster-whisper) or `gpu` (whisper-cli) | none | A config change **never** re-transcribes. Loop detector and fallback. |
 | `camera_health` | `sources.cam_a`, `sources.cam_b` | `camera_health.txt` | camera hashes | light | none | One pass per camera, one report. |
-| `plan` | `plan.phases`, `plan.closing_a`, `cut`, `sources.master`, `audio.downmix` | `camera_plan.json`, `sync/silences.raw.txt` | phases + cut + downmix | light | **Gate A** | Runs **on demand only** (never by dependency). Silence cache keyed by master hash. |
+| `plan` | `plan.phases`, `plan.closing_a`, `cut`, `sources.master`, `audio.downmix` | `camera_plan.json`, `video/work/silences.raw.txt` | phases + cut + downmix | light | **Gate A** | Runs **on demand only** (never by dependency). Silence cache keyed by master hash. |
 | `callouts` | `callouts.toml` (provided), `outline.md` (provided), `transcript.srt`, `cut_fingerprint` | `callouts.ass`, `callouts_render.ass` | callouts.toml hash + cut_fingerprint | light | **Gate A** | Fails if an anchor does not exist or callouts overlap. |
 | `control_frames` | `callouts.ass`, `camera_plan.json`, cameras, `sync` | `gate_a/sheets/*.jpg` | .ass hash + plan hash | light | none | Review material for Gate A. |
 | `segments` | `camera_plan.json` (approved), cameras, `video_fingerprint` | `video/work/seg_*.mp4`, `segments.txt` | `video_fingerprint` + plan hash | **gpu** | none | Frame-exact; validates plan, grid, camera end; verifies the sum of durations. |
@@ -210,8 +211,8 @@ and deleting the `.partial` files.
 
 Everything that happens is published as an in-memory event and over WebSocket:
 `task.started`, `task.progress`, `task.log`, `task.finished`, `task.failed`,
-`artifact.changed`, `approval.changed`, `config.changed`. The CLI prints them; the UI
-renders them.
+`artifact.changed`, `approval.changed`, `config.changed`, `scheduler.failed` (a coordinator
+failure, not a task failure; carries `error`). The CLI prints them; the UI renders them.
 
 ## 7. Local API and CLI
 

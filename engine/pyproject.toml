@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "lychnia"
+version = "0.1.0"
+description = "Lychnia Engine: orchestrator, local API and CLI for the sermon pipeline"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "pydantic>=2.7,<3",
+  "tomlkit>=0.13,<1",
+  "platformdirs>=4.2,<5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.2,<9"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["lychnia"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["media: needs real media files (opt-in smoke tests)"]
+addopts = "-m 'not media'"

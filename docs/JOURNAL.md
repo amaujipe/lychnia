@@ -90,3 +90,67 @@ expected `.ass`; 652 KB) with Andrés's authorization.
 
 **Next step:** execute plan 01 (`superpowers:subagent-driven-development`, Andrés still has to
 pick subagents or inline), then write plan 02.
+
+## 2026-09-04: Engine plan 01 executed
+
+Executed with `superpowers:subagent-driven-development`: 15 tasks, every task reviewed,
+eight fix rounds in total (Tasks 6, 8, 9, 10, 11, 13 ×2, 14). What landed, one line per
+task group:
+
+- Package skeleton (Python 3.12 pin, hatchling, pytest harness), error types and the
+  es/en i18n message catalogs.
+- `project.toml` model with derived values and fingerprints, the legacy adapter for the
+  2026-08-30 fixtures, and comment-preserving config edits (tomlkit).
+- Content hashing (fast path for large media), project layout, source discovery and the
+  localized `project.toml` template.
+- SQLite state store (artifacts, runs, events) and the artifact registry, task graph with
+  composite targets, and the `Project` object.
+- Event bus and task context (partial outputs, cancellation), derived task statuses and
+  gates, and the three-lane scheduler (gpu/cpu_heavy/light).
+- ffmpeg runner with progress, cancellation and `filter_path` escaping.
+- i18n static scan (this task): a test that fails when code uses a message key missing
+  from either catalog, when a dynamic `status.*` key for a `State` is missing, or when
+  Spanish operator text is inlined instead of routed through the catalogs.
+
+**Suite: 104 tests passing** (101 before this task, plus the 3 new scan tests).
+
+Deviations and decisions taken during execution (each affects how the code reads, not the
+plan's scope):
+
+- `pyproject.toml` has no `readme` field: hatchling cannot reference `../README.md` from
+  inside `engine/`.
+- `patch_config` rejects array-of-tables sections and nested values with `ConfigError`
+  (i18n keys `validation.unsupported_patch_section` / `validation.unsupported_patch_value`).
+- The `project.toml` template renders its example values through i18n
+  (`template.example_*` keys) instead of hardcoding Spanish strings.
+- `StateStore` fetches rows inside its own lock (`_query`/`_execute`) so concurrent threads
+  cannot race, and it gained `set_run_log`.
+- `Context.commit()` rolls back a multi-output commit when a rename fails
+  (`task.commit_failed`).
+- The scheduler uses one completion queue per coordinator, guards the coordinator loop
+  (`RunReport.error`, a `scheduler.failed` event), locks `_active`, captures the fingerprint
+  and output paths before `task.run`, fails the run if launch setup itself raises, and stops
+  new launches once `shutdown()` is called.
+- `Project.config` and `Project.store` lazy loads are locked.
+- `run_ffmpeg` terminates the child process and closes its pipes in a `finally` block.
+- The fake task `NeedsP` (test fixture) produces `np.txt`.
+- The two type-narrowing `assert`s in the ffmpeg runner became an explicit guard clause.
+- The i18n scan also caught five event-type strings (`task.started`, `task.progress`,
+  `task.log`, `task.finished`, `task.failed`) that share the `task.*` namespace with the
+  error keys; added to both catalogs with operator-facing text.
+
+Deferred minors are tracked in the SDD ledger under
+`.superpowers/sdd/2026-09-04-engine-01-foundation/` and will be triaged by the final
+whole-branch review.
+
+- Final whole-branch review verdict: **ready with fixes**. Fixes applied in this commit
+  pair: the i18n scan regex (pipe-form keys) plus a dead-key check against the catalogs
+  (caught and removed the unused `status.cancelled` key), an interrupted-run reaper
+  (`StateStore.reclaim_interrupted_runs`, called at `Scheduler.__init__`), the `lanes`
+  override merging with `LANE_CAPACITY` instead of replacing it, the `LYCHNIA_LANG` guard
+  against unknown languages, one docstring wording fix, and the README/spec/ROADMAP
+  amendments listed above.
+- Remaining minors from the review are deferred to plans 02 to 04, as triaged in the
+  ROADMAP §2 note added in this same session.
+
+**Next step:** write plan 02 (text lane) with `superpowers:writing-plans`, then execute it.

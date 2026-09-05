@@ -14,8 +14,11 @@ Repository: https://github.com/amaujipe/lychnia
 
 ## Status
 
-**Design phase (September 2026).** The spec of the first sub-project, the Engine, exists.
-There is no code yet. The pipeline that will become the app lives and works today in
+**Engine under construction (September 2026).** The Engine spec is approved and plan 01
+of 4 is implemented: configuration, artifact registry, task graph, derived statuses,
+scheduler and ffmpeg runner, with the unit and golden tests that cover them. The next
+plans add the text lane, the media lane and the API/CLI. The pipeline that will become
+the app lives and works today in
 `~/Repositorios/multimedia-iglesia-tunja` (Make + Python scripts + Claude Code as
 orchestrator); Lychnia replaces it with its own orchestrator, a local API and a desktop
 interface.
@@ -39,7 +42,7 @@ lychnia/
 │       └── plans/2026-09-04-engine-01-foundation.md     # Engine plan 01 of 4
 ├── tools/                         # repo tooling: check_roadmap.py and the Claude Code hooks (tools/hooks/)
 ├── .claude/settings.json          # Claude Code hooks: inject ROADMAP at start, guard commits, closing ritual
-├── engine/                        # (next) Python package `lychnia`: orchestrator + API + tasks + brand resources
+├── engine/                        # Python package `lychnia` (plan 01 done: config, registry, graph, statuses, scheduler, ffmpeg runner) + tests
 └── app/                           # (later) Tauri + web UI
 ```
 
