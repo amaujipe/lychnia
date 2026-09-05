@@ -10,6 +10,14 @@ KEY_RE = re.compile(r"""["'](?:validation|status|action|task|template)\.[a-z0-9_
 SPANISH_RE = re.compile(r"""["'][^"'\n]*\b[a-z]*[áéíóúñ][a-z]*\b[^"'\n]*["']""")
 ALLOWED_SPANISH_FILES = set()   # add a relative path here only with a comment explaining why
 
+# Event names published on the bus (spec §6.5), not i18n keys — they collide with the
+# validation/status/action/task/template namespaces matched by KEY_RE but are never
+# looked up through i18n.t()/load_messages(), so they must not be added to the catalogs.
+EVENT_TYPES = {
+    "task.started", "task.progress", "task.log", "task.finished", "task.failed",
+    "artifact.changed", "approval.changed", "config.changed", "scheduler.failed",
+}
+
 
 def _sources() -> list[Path]:
     return [p for p in PACKAGE.rglob("*.py") if ".venv" not in p.parts]
@@ -19,7 +27,7 @@ def _used_keys() -> set[str]:
     keys: set[str] = set()
     for src in _sources():
         keys.update(m.strip("\"'") for m in KEY_RE.findall(src.read_text(encoding="utf-8")))
-    return keys
+    return keys - EVENT_TYPES
 
 
 def test_every_key_used_in_code_exists_in_both_catalogs():
