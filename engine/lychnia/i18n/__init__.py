@@ -36,7 +36,8 @@ def load_messages(lang: str) -> dict[str, str]:
 
 
 def current_language() -> str:
-    return os.environ.get("LYCHNIA_LANG", DEFAULT_LANG)
+    lang = os.environ.get("LYCHNIA_LANG", DEFAULT_LANG)
+    return lang if lang in available_languages() else DEFAULT_LANG
 
 
 def t(key: str, lang: str | None = None, **params: object) -> str:

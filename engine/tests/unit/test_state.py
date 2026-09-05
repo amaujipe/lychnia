@@ -60,6 +60,20 @@ def test_store_can_be_deleted_and_recreated(tmp_path):
     assert sqlite3.connect(p).execute("PRAGMA journal_mode").fetchone()[0].lower() == "wal"
 
 
+def test_reclaim_interrupted_runs(tmp_path):
+    store = StateStore(tmp_path / "s.sqlite")
+    r1 = store.start_run("make_x")
+    r2 = store.start_run("make_y")
+    r3 = store.start_run("make_z")
+    store.set_run_status(r2, "running")
+    store.finish_run(r3, "done")
+    assert store.reclaim_interrupted_runs() == 2
+    for rid in (r1, r2):
+        run = store.get_run(rid)
+        assert run.status == "failed" and run.error == "interrupted" and run.finished_at
+    assert store.get_run(r3).status == "done"
+
+
 def test_concurrent_readers_and_writers_do_not_raise(tmp_path):
     store = StateStore(tmp_path / "s.sqlite")
     exceptions = []

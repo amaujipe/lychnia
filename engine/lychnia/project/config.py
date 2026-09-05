@@ -163,7 +163,7 @@ class ProjectConfig(_Model):
 
     @property
     def end(self) -> float:
-        """Cut end, bounded by MASTER_LIMIT and snapped to the frame grid."""
+        """Cut end; when MASTER_LIMIT bounds it, the bound is snapped to the frame grid."""
         cut = self.require_cut()
         if self.master_limit is None:
             return cut.end

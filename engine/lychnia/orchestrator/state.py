@@ -80,8 +80,14 @@ class StateStore:
             self._db.commit()
             return int(cur.lastrowid or 0)
 
+    def _execute_rowcount(self, sql: str, params: tuple = ()) -> int:
+        with self._lock:
+            cur = self._db.execute(sql, params)
+            self._db.commit()
+            return int(cur.rowcount or 0)
+
     # ── artifacts ────────────────────────────────────────────────────────
-    def record_artifact(self, name: str, path: str, hash: str, fingerprint: str, producer: str) -> None:
+    def record_artifact(self, name: str, path: str, hash: str | None, fingerprint: str, producer: str) -> None:
         self._execute("""INSERT INTO artifacts(name, path, hash, fingerprint, producer, produced_at, edited)
                          VALUES (?, ?, ?, ?, ?, ?, 0)
                          ON CONFLICT(name) DO UPDATE SET path=excluded.path, hash=excluded.hash,
@@ -133,6 +139,16 @@ class StateStore:
     def latest_run(self, task: str) -> RunRecord | None:
         rows = self._query("SELECT * FROM runs WHERE task=? ORDER BY id DESC LIMIT 1", (task,))
         return self._runrec(rows[0]) if rows else None
+
+    def reclaim_interrupted_runs(self) -> int:
+        """Fail every run left `queued` or `running` by a process that died (spec: crash recovery).
+
+        Called once at Scheduler startup, before anything is launched.
+        """
+        return self._execute_rowcount(
+            "UPDATE runs SET status='failed', error='interrupted', finished_at=? "
+            "WHERE status IN ('queued', 'running')",
+            (_now(),))
 
     @staticmethod
     def _runrec(row: sqlite3.Row) -> RunRecord:
