@@ -38,6 +38,8 @@ def test_runs_and_events(tmp_path):
     assert run.id == r1 and run.status == "queued" and run.master_limit == 700 and run.finished_at is None
     store.set_run_status(r1, "running")
     assert store.get_run(r1).status == "running"
+    store.set_run_log(r1, "x.log")
+    assert store.get_run(r1).log_path == "x.log"
     store.add_event(r1, "task.progress", {"pct": 50})
     store.finish_run(r1, "failed", error="boom")
     run = store.get_run(r1)

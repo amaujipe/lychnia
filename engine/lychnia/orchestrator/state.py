@@ -120,6 +120,9 @@ class StateStore:
     def set_run_status(self, run_id: int, status: str) -> None:
         self._execute("UPDATE runs SET status=? WHERE id=?", (status, run_id))
 
+    def set_run_log(self, run_id: int, log_path: str) -> None:
+        self._execute("UPDATE runs SET log_path=? WHERE id=?", (log_path, run_id))
+
     def finish_run(self, run_id: int, status: str, error: str | None = None) -> None:
         self._execute("UPDATE runs SET status=?, error=?, finished_at=? WHERE id=?", (status, error, _now(), run_id))
 
