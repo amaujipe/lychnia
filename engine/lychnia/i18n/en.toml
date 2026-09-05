@@ -13,6 +13,8 @@ phases_gap = "The plan phases have a gap or overlap between {end} and {start}."
 phases_start_mismatch = "The first phase starts at {phase} but cut.start is {cut}."
 phases_end_mismatch = "The last phase ends at {phase} but cut.end is {cut}."
 config_unreadable = "project.toml could not be read: {detail}"
+unsupported_patch_section = "Section {section} is an array of tables ([[{section}]]); edit it whole through the API, not field by field."
+unsupported_patch_value = "Field {field} does not accept tables or lists in a patch; pass scalar values."
 
 [status]
 missing_input = "missing: {items}"
