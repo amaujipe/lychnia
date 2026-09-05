@@ -39,6 +39,7 @@ add_source = "put the file under input/ and fill in sources.{source} in project.
 
 [task]
 cancelled = "cancelled by the operator"
+commit_failed = "could not move {artifact} into its final place: {detail}"
 ffmpeg_failed = "ffmpeg failed (exit code {code}); see the run log"
 ffmpeg_missing = "ffmpeg was not found; install it or set its path in the Engine configuration"
 output_missing = "the task finished without producing {artifact}"

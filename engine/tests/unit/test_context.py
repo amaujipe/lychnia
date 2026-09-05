@@ -70,3 +70,32 @@ def test_config_is_captured_at_start(make_project):
         (project.root / "project.toml").read_text().replace("end = 200.0", "end = 300.0"), encoding="utf-8")
     project.reload()
     assert project.config.duration == 200.0 and ctx.cfg.duration == 100.0
+
+
+def test_commit_rolls_back_when_a_rename_fails(make_project, monkeypatch):
+    ctx, q, project = _ctx(make_project)
+    p1 = ctx.output("x.txt")
+    p2 = ctx.output("y.txt")
+    p1.write_text("x", encoding="utf-8")
+    p2.write_text("y", encoding="utf-8")
+
+    from pathlib import Path
+    original_replace = Path.replace
+    call_count = [0]
+
+    def replace_with_error(self, target):
+        call_count[0] += 1
+        if call_count[0] == 2:
+            raise OSError("disk full")
+        return original_replace(self, target)
+
+    monkeypatch.setattr(Path, "replace", replace_with_error)
+
+    with pytest.raises(TaskError) as exc:
+        ctx.commit()
+
+    assert exc.value.key == "task.commit_failed" and exc.value.params["artifact"] == "y.txt"
+    assert not project.artifact_path("x.txt").exists()
+    assert not project.artifact_path("y.txt").exists()
+    partials = list((project.root / "work").glob("*.partial"))
+    assert len(partials) == 0
