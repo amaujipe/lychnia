@@ -143,7 +143,9 @@ python -m venv .venv
 python = "3.12.14"
 ```
 
-- [ ] **Step 2: Write `.gitignore` at the repo root**
+- [ ] **Step 2: Check `.gitignore` at the repo root**
+
+It already exists (created with the Claude Code hooks on 2026-09-04). Make sure it contains these entries and add any that are missing:
 
 ```gitignore
 # Python
@@ -156,6 +158,8 @@ engine/.venv/
 # Engine runtime files
 *.partial
 ```
+
+Note: `engine/tests/unit/test_roadmap_consistency.py` already exists too (it checks `docs/ROADMAP.md` against the specs and plans). It starts running with the suite from this task on; keep it green.
 
 - [ ] **Step 3: Write `engine/pyproject.toml`**
 

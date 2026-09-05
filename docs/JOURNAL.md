@@ -80,5 +80,13 @@ expected `.ass`; 652 KB) with Andrés's authorization.
   what is still undesigned and the pending work outside the code. `CLAUDE.md` now lists it as
   reading number 1 and fixes the closing ritual: JOURNAL + ROADMAP + memory.
 
-**Next step:** Andrés confirms the split and the decisions, then execute plan 01
-(`superpowers:subagent-driven-development` recommended) and write plan 02 afterwards.
+- **Plan 01 decisions confirmed** by Andrés (the eight listed at the top of the plan).
+- **Enforcement of the documentation ritual** (Andrés asked how to guarantee it, given that
+  instructions alone are probabilistic): `tools/check_roadmap.py` + pytest test, and three
+  Claude Code hooks in `.claude/settings.json` (`SessionStart` injects the ROADMAP,
+  `PreToolUse` guards `git commit`, `Stop` blocks the turn until JOURNAL and ROADMAP change
+  after commits that touched working files). A git `pre-commit` hook for commits made
+  outside Claude Code was deferred by Andrés. Details in `ROADMAP.md` §5.
+
+**Next step:** execute plan 01 (`superpowers:subagent-driven-development`, Andrés still has to
+pick subagents or inline), then write plan 02.

@@ -102,3 +102,16 @@ mechanism, model manifest format, USB import UX, ffmpeg bundling per OS.
 - A new spec or plan adds its path to the `Where` column the day it is written.
 - Move an item out of §4 only when it is done; write the outcome in `JOURNAL.md`.
 - Never delete rows to make it shorter; mark them `done`.
+
+Enforcement (2026-09-04), so this file cannot go stale by accident:
+
+- `tools/check_roadmap.py` fails when a spec or plan is not mentioned here, when a reference
+  points to a missing file, or when `Last update` is older than the newest commit under
+  `docs/superpowers/`. It runs in the pytest suite (`engine/tests/unit/test_roadmap_consistency.py`).
+- Claude Code hooks in `.claude/settings.json` (scripts in `tools/hooks/`): `SessionStart`
+  injects this file into the model context; `PreToolUse` denies a `git commit` that touches
+  `docs/superpowers/` without this file or with an inconsistent roadmap; `Stop` blocks the end
+  of a turn when commits made in the session touched working files but `JOURNAL.md` and this
+  file did not change (at most three reminders per session, then a warning).
+- Pending (Andrés's decision): a repo-level git `pre-commit` hook with the same rule, for
+  commits made outside Claude Code.
