@@ -39,7 +39,7 @@ lychnia/
 │       └── plans/2026-09-04-engine-01-foundation.md     # Engine plan 01 of 4
 ├── tools/                         # repo tooling: check_roadmap.py and the Claude Code hooks (tools/hooks/)
 ├── .claude/settings.json          # Claude Code hooks: inject ROADMAP at start, guard commits, closing ritual
-├── engine/                        # (next) Python package `lychnia`: orchestrator + API + tasks + brand resources
+├── engine/                        # Python package `lychnia` (plan 01 done: config, registry, graph, statuses, scheduler, ffmpeg runner) + tests
 └── app/                           # (later) Tauri + web UI
 ```
 

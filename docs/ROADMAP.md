@@ -9,7 +9,7 @@
 **States**, in order: `not started` → `brainstorm` → `spec draft` → `spec approved` →
 `plan NN written` → `plan NN executed` → `done`. A row can also carry `blocked: <why>`.
 
-**Last update:** 2026-09-04.
+**Last update:** 2026-09-04 (plan 01 executed).
 
 ## 1. The application in one look
 
@@ -31,8 +31,8 @@ The Engine spec is implemented through four plans. Each plan leaves the test sui
 
 | Plan | Scope | State | Golden / smoke evidence |
 |---|---|---|---|
-| 01 Foundation | package, i18n, errors, `project.toml` model + fingerprints, legacy fixture adapter, tomlkit edits, hashing, layout/discovery/template, SQLite state, artifacts/task/graph, events/context, derived statuses, scheduler, ffmpeg runner, `filter_path` | `plan 01 written` (2026-09-04), awaiting Andrés's confirmation of 8 planning decisions listed at the top of the plan | golden config test on the 2026-08-30 sermon |
-| 02 Text lane | `text/srt.py`, anchoring, `text/ass_style.py`, `text/callouts.py`; tasks `plan`, `callouts`, `subtitles`, `blog`, `init`; assistant `srt.search` | `not started` (scope defined in plan 01) | 87 shots; `callouts.ass` byte for byte (CRLF-normalized); `final.srt` |
+| 01 Foundation | package, i18n, errors, `project.toml` model + fingerprints, legacy fixture adapter, tomlkit edits, hashing, layout/discovery/template, SQLite state, artifacts/task/graph, events/context, derived statuses, scheduler, ffmpeg runner, `filter_path` | `plan 01 executed (2026-09-04)`: 15 tasks, subagent-driven, 104 tests passing | golden config test on the 2026-08-30 sermon |
+| 02 Text lane | `text/srt.py`, anchoring, `text/ass_style.py`, `text/callouts.py`; tasks `plan`, `callouts`, `subtitles`, `blog`, `init`; assistant `srt.search` | `next` (scope defined in plan 01) | 87 shots; `callouts.ass` byte for byte (CRLF-normalized); `final.srt` |
 | 03 Media lane | capabilities, encoders, tasks `transcribe` (faster-whisper), `camera_health`, `control_frames`, `segments`, `preview`, `render`, `shorts` + tracking, `thumbnail`; sync assistants; `WriterManual`, `BibleManual`, `DetectorMedian` | `not started` (scope defined in plan 01) | opt-in smoke with `MASTER_LIMIT=700` on `prueba-render` media; `filter_path` against real ffmpeg |
 | 04 API + CLI | FastAPI routes, WebSocket events, token file, Typer CLI, Engine config (`platformdirs`), package-wide i18n scan, minimal CI | `not started` (scope defined in plan 01) | API tests with `TestClient`: 401, `Origin` rejected, provide → approve → status |
 
@@ -94,7 +94,7 @@ mechanism, model manifest format, USB import UX, ffmpeg bundling per OS.
 | Confirm by hand at sic.gov.co that «Lychnia» is not a registered mark in Colombia | Andrés | pending |
 | Push the local commits to `github.com/amaujipe/lychnia` | Andrés | pending |
 | Which target machines exist for real (volunteer laptops, a PC with NVIDIA?) to size capability detection and defaults | Andrés | open |
-| Confirm the 8 planning decisions at the top of plan 01 and choose the execution mode | Andrés | open |
+| Confirm the 8 planning decisions at the top of plan 01 and choose the execution mode | Andrés | done (confirmed 2026-09-04; subagents) |
 
 ## 5. How to update this file
 

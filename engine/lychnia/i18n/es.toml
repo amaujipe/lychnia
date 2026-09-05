@@ -43,6 +43,11 @@ commit_failed = "no se pudo dejar {artifact} en su lugar definitivo: {detail}"
 ffmpeg_failed = "ffmpeg falló (código {code}); mirá el log de la corrida"
 ffmpeg_missing = "no se encuentra ffmpeg; instalalo o indicá su ruta en la configuración del Engine"
 output_missing = "la tarea terminó sin producir {artifact}"
+started = "arrancó la tarea {task}"
+progress = "{task}: {pct}%"
+log = "{task}: {msg}"
+finished = "{task} terminó bien"
+failed = "{task} falló"
 
 [template]
 header = "project.toml: la ÚNICA fuente de verdad de esta prédica. Lo que se deriva (duración, frames, fin de cada cámara) NO se escribe aquí."
