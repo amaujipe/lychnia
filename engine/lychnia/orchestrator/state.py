@@ -69,37 +69,42 @@ class StateStore:
         with self._lock:
             self._db.close()
 
-    def _run(self, sql: str, params: tuple = ()) -> sqlite3.Cursor:
+    def _query(self, sql: str, params: tuple = ()) -> list[sqlite3.Row]:
+        with self._lock:
+            cur = self._db.execute(sql, params)
+            return cur.fetchall()
+
+    def _execute(self, sql: str, params: tuple = ()) -> int:
         with self._lock:
             cur = self._db.execute(sql, params)
             self._db.commit()
-            return cur
+            return int(cur.lastrowid or 0)
 
     # ── artifacts ────────────────────────────────────────────────────────
     def record_artifact(self, name: str, path: str, hash: str, fingerprint: str, producer: str) -> None:
-        self._run("""INSERT INTO artifacts(name, path, hash, fingerprint, producer, produced_at, edited)
-                     VALUES (?, ?, ?, ?, ?, ?, 0)
-                     ON CONFLICT(name) DO UPDATE SET path=excluded.path, hash=excluded.hash,
-                       fingerprint=excluded.fingerprint, producer=excluded.producer,
-                       produced_at=excluded.produced_at, edited=0""",
-                  (name, path, hash, fingerprint, producer, _now()))
+        self._execute("""INSERT INTO artifacts(name, path, hash, fingerprint, producer, produced_at, edited)
+                         VALUES (?, ?, ?, ?, ?, ?, 0)
+                         ON CONFLICT(name) DO UPDATE SET path=excluded.path, hash=excluded.hash,
+                           fingerprint=excluded.fingerprint, producer=excluded.producer,
+                           produced_at=excluded.produced_at, edited=0""",
+                      (name, path, hash, fingerprint, producer, _now()))
 
     def get_artifact(self, name: str) -> ArtifactRecord | None:
-        row = self._run("SELECT * FROM artifacts WHERE name = ?", (name,)).fetchone()
-        return self._artifact(row) if row else None
+        rows = self._query("SELECT * FROM artifacts WHERE name = ?", (name,))
+        return self._artifact(rows[0]) if rows else None
 
     def list_artifacts(self) -> list[ArtifactRecord]:
-        return [self._artifact(r) for r in self._run("SELECT * FROM artifacts ORDER BY name").fetchall()]
+        return [self._artifact(r) for r in self._query("SELECT * FROM artifacts ORDER BY name")]
 
     def approve(self, name: str, hash: str, who: str) -> None:
-        self._run("UPDATE artifacts SET approved_hash=?, approved_by=?, approved_at=? WHERE name=?",
-                  (hash, who, _now(), name))
+        self._execute("UPDATE artifacts SET approved_hash=?, approved_by=?, approved_at=? WHERE name=?",
+                      (hash, who, _now(), name))
 
     def revoke_approval(self, name: str) -> None:
-        self._run("UPDATE artifacts SET approved_hash=NULL, approved_by=NULL, approved_at=NULL WHERE name=?", (name,))
+        self._execute("UPDATE artifacts SET approved_hash=NULL, approved_by=NULL, approved_at=NULL WHERE name=?", (name,))
 
     def mark_edited(self, name: str, hash: str) -> None:
-        self._run("UPDATE artifacts SET hash=?, edited=1 WHERE name=?", (hash, name))
+        self._execute("UPDATE artifacts SET hash=?, edited=1 WHERE name=?", (hash, name))
 
     @staticmethod
     def _artifact(row: sqlite3.Row) -> ArtifactRecord:
@@ -109,23 +114,22 @@ class StateStore:
 
     # ── runs ─────────────────────────────────────────────────────────────
     def start_run(self, task: str, master_limit: float | None = None, log_path: str | None = None) -> int:
-        cur = self._run("INSERT INTO runs(task, started_at, status, master_limit, log_path) VALUES (?, ?, 'queued', ?, ?)",
-                        (task, _now(), master_limit, log_path))
-        return int(cur.lastrowid)
+        return self._execute("INSERT INTO runs(task, started_at, status, master_limit, log_path) VALUES (?, ?, 'queued', ?, ?)",
+                             (task, _now(), master_limit, log_path))
 
     def set_run_status(self, run_id: int, status: str) -> None:
-        self._run("UPDATE runs SET status=? WHERE id=?", (status, run_id))
+        self._execute("UPDATE runs SET status=? WHERE id=?", (status, run_id))
 
     def finish_run(self, run_id: int, status: str, error: str | None = None) -> None:
-        self._run("UPDATE runs SET status=?, error=?, finished_at=? WHERE id=?", (status, error, _now(), run_id))
+        self._execute("UPDATE runs SET status=?, error=?, finished_at=? WHERE id=?", (status, error, _now(), run_id))
 
     def get_run(self, run_id: int) -> RunRecord | None:
-        row = self._run("SELECT * FROM runs WHERE id=?", (run_id,)).fetchone()
-        return self._runrec(row) if row else None
+        rows = self._query("SELECT * FROM runs WHERE id=?", (run_id,))
+        return self._runrec(rows[0]) if rows else None
 
     def latest_run(self, task: str) -> RunRecord | None:
-        row = self._run("SELECT * FROM runs WHERE task=? ORDER BY id DESC LIMIT 1", (task,)).fetchone()
-        return self._runrec(row) if row else None
+        rows = self._query("SELECT * FROM runs WHERE task=? ORDER BY id DESC LIMIT 1", (task,))
+        return self._runrec(rows[0]) if rows else None
 
     @staticmethod
     def _runrec(row: sqlite3.Row) -> RunRecord:
@@ -134,9 +138,9 @@ class StateStore:
 
     # ── events ───────────────────────────────────────────────────────────
     def add_event(self, run_id: int | None, type: str, payload: dict) -> None:
-        self._run("INSERT INTO events(run_id, t, type, payload) VALUES (?, ?, ?, ?)",
-                  (run_id, _now(), type, json.dumps(payload, ensure_ascii=False)))
+        self._execute("INSERT INTO events(run_id, t, type, payload) VALUES (?, ?, ?, ?)",
+                      (run_id, _now(), type, json.dumps(payload, ensure_ascii=False)))
 
     def events_for(self, run_id: int) -> list[tuple[str, str, dict]]:
-        rows = self._run("SELECT type, t, payload FROM events WHERE run_id=? ORDER BY id", (run_id,)).fetchall()
+        rows = self._query("SELECT type, t, payload FROM events WHERE run_id=? ORDER BY id", (run_id,))
         return [(r["type"], r["t"], json.loads(r["payload"])) for r in rows]

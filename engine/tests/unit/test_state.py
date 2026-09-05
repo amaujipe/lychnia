@@ -1,4 +1,5 @@
 import sqlite3
+import threading
 
 from lychnia.orchestrator.state import StateStore
 
@@ -55,3 +56,29 @@ def test_store_can_be_deleted_and_recreated(tmp_path):
     store2 = StateStore(p)
     assert store2.get_artifact("x") is None
     assert sqlite3.connect(p).execute("PRAGMA journal_mode").fetchone()[0].lower() == "wal"
+
+
+def test_concurrent_readers_and_writers_do_not_raise(tmp_path):
+    store = StateStore(tmp_path / "s.sqlite")
+    exceptions = []
+
+    def worker(thread_id: int):
+        try:
+            for i in range(50):
+                store.record_artifact(f"a{thread_id}", f"path{i}", f"h{i}", f"f{i}", "producer")
+                store.get_artifact(f"a{thread_id}")
+                run_id = store.start_run(f"task_{thread_id}")
+                store.list_artifacts()
+                store.add_event(run_id, "test", {"i": i})
+                store.events_for(run_id)
+        except Exception as e:
+            exceptions.append(e)
+
+    threads = [threading.Thread(target=worker, args=(i,)) for i in range(8)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert not exceptions, f"Exceptions occurred: {exceptions}"
+    assert len(store.list_artifacts()) == 8
