@@ -143,4 +143,14 @@ Deferred minors are tracked in the SDD ledger under
 `.superpowers/sdd/2026-09-04-engine-01-foundation/` and will be triaged by the final
 whole-branch review.
 
+- Final whole-branch review verdict: **ready with fixes**. Fixes applied in this commit
+  pair: the i18n scan regex (pipe-form keys) plus a dead-key check against the catalogs
+  (caught and removed the unused `status.cancelled` key), an interrupted-run reaper
+  (`StateStore.reclaim_interrupted_runs`, called at `Scheduler.__init__`), the `lanes`
+  override merging with `LANE_CAPACITY` instead of replacing it, the `LYCHNIA_LANG` guard
+  against unknown languages, one docstring wording fix, and the README/spec/ROADMAP
+  amendments listed above.
+- Remaining minors from the review are deferred to plans 02 to 04, as triaged in the
+  ROADMAP §2 note added in this same session.
+
 **Next step:** write plan 02 (text lane) with `superpowers:writing-plans`, then execute it.

@@ -44,6 +44,10 @@ they are not forgotten):
 - Default projects root `~/Lychnia/projects/` and `<data>/config.toml` (plan 04).
 - Capability detection: encoder probes, GPU vendor, RAM, models, internet (plan 03).
 - `INFO.md` templates in the Shell language (plan 01 ships es/en files).
+- Spec amended on 2026-09-04 after plan 01 (§6.5 scheduler.failed event, §5 silences path);
+  plan 04 owes a whole-section writer for [[shorts]] and [shorts_overrides] because
+  patch_config rejects them; plan 02 must declare config: inputs as leaf fields for
+  sections whose fields all have defaults (e.g. config:sync.offset_a, not config:sync).
 
 ## 3. Other sub-projects: what is already decided, what is open
 

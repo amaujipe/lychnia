@@ -14,8 +14,11 @@ Repository: https://github.com/amaujipe/lychnia
 
 ## Status
 
-**Design phase (September 2026).** The spec of the first sub-project, the Engine, exists.
-There is no code yet. The pipeline that will become the app lives and works today in
+**Engine under construction (September 2026).** The Engine spec is approved and plan 01
+of 4 is implemented: configuration, artifact registry, task graph, derived statuses,
+scheduler and ffmpeg runner, with the unit and golden tests that cover them. The next
+plans add the text lane, the media lane and the API/CLI. The pipeline that will become
+the app lives and works today in
 `~/Repositorios/multimedia-iglesia-tunja` (Make + Python scripts + Claude Code as
 orchestrator); Lychnia replaces it with its own orchestrator, a local API and a desktop
 interface.
