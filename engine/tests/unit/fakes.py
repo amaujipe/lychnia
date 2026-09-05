@@ -9,6 +9,7 @@ FAKE_ARTIFACTS = {a.name: a for a in [
     ArtifactSpec("y.txt", "work/y.txt"),
     ArtifactSpec("z.txt", "work/z.txt"),
     ArtifactSpec("p.txt", "work/p.txt"),
+    ArtifactSpec("np.txt", "work/np.txt"),
     ArtifactSpec("given.txt", "work/given.txt", providable=True),
 ]}
 
