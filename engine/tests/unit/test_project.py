@@ -1,3 +1,5 @@
+import threading
+
 from lychnia.project.project import Project
 from tests.unit.fakes import FAKE_ARTIFACTS
 
@@ -40,3 +42,28 @@ def test_slug_in_paths_and_reload(make_project):
     p.reload()
     assert p.config.meta.slug == "otro"
     assert ARTIFACTS["final.mp4"].path == "video/final.mp4"
+
+
+def test_config_never_returns_none_while_reloading(make_project):
+    root = make_project()
+    p = Project(root, artifacts=FAKE_ARTIFACTS)
+    exceptions: list[Exception] = []
+
+    def reloader():
+        for _ in range(500):
+            p.reload()
+
+    def reader():
+        try:
+            for _ in range(500):
+                assert p.config.meta.slug == "prueba"
+        except Exception as exc:  # noqa: BLE001 - collected and asserted below
+            exceptions.append(exc)
+
+    threads = [threading.Thread(target=reloader)] + [threading.Thread(target=reader) for _ in range(4)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert not exceptions, f"Exceptions occurred: {exceptions}"

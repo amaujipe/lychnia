@@ -195,6 +195,34 @@ def test_shutdown_cancels_active_runs(make_project):
     assert project.store.get_run(report.started[0]).status == "cancelled"
 
 
+def test_launch_failure_marks_the_run_failed(make_project, monkeypatch):
+    project, graph, bus, q = _setup(make_project, [MakeX()])
+    sched = Scheduler(graph, project, bus)
+
+    def _boom(*args, **kwargs):
+        raise RuntimeError("fp boom")
+
+    monkeypatch.setattr("lychnia.orchestrator.scheduler.full_fingerprint", _boom)
+    report = sched.run_target("make_x", wait=True)
+    assert report.wait(5)
+    assert report.error is not None and "fp boom" in report.error
+    assert project.store.latest_run("make_x").status == "failed"
+
+
+def test_shutdown_stops_further_launches(make_project):
+    project, graph, bus, q = _setup(make_project, [Slow(), SlowB()])
+    graph.targets = {"both": ("slow_a", "slow_b")}
+    sched = Scheduler(graph, project, bus)
+    report = sched.run_target("both")
+    deadline = time.time() + 5
+    while not report.started and time.time() < deadline:
+        time.sleep(0.01)
+    assert report.started
+    sched.shutdown()
+    assert report.wait(10)
+    assert sched.active_runs() == []
+
+
 def _drain(q):
     out = []
     while not q.empty():
