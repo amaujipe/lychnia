@@ -18,7 +18,7 @@ Lychnia is four sub-projects, in this order (decided in the brainstorm of 2026-0
 
 | # | Sub-project | What it is | State | Where |
 |---|---|---|---|---|
-| 1 | **Engine** | Python process: orchestrator, tasks (ffmpeg, whisper, generators), local API on 127.0.0.1, CLI. The "backend". | `spec approved`, `plan 01 written` | spec `superpowers/specs/2026-09-04-engine-design.md`; plans `superpowers/plans/2026-09-04-engine-01-*.md` |
+| 1 | **Engine** | Python process: orchestrator, tasks (ffmpeg, whisper, generators), local API on 127.0.0.1, CLI. The "backend". | `spec approved`, `plan 01 executed`, `plan 02 next` | spec `superpowers/specs/2026-09-04-engine-design.md`; plans `superpowers/plans/2026-09-04-engine-01-*.md` |
 | 2 | **AI providers** | Writer (local Qwen3 by chunks, Claude API), Bible database, person detector, provider selection by capabilities and internet. Lives inside the Engine package. | `brainstorm` (decisions 2, 6, 8, 9 taken; interfaces defined in Engine spec §10) | no spec yet |
 | 3 | **Shell** | Tauri desktop app: one codebase for Windows, macOS, Linux. Starts the Engine as a sidecar; web UI consumes the API. Screens: project, board, Gate A, Gate B, delivery. | `brainstorm` (decision 3 taken) | no spec yet |
 | 4 | **Distribution** | PyInstaller per OS, `llama-server` as a separate binary, model bundle with manifest, USB import, Tauri installers, CI matrix. | `brainstorm` (decision 5 taken) | no spec yet |

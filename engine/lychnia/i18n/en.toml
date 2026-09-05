@@ -43,11 +43,6 @@ commit_failed = "could not move {artifact} into its final place: {detail}"
 ffmpeg_failed = "ffmpeg failed (exit code {code}); see the run log"
 ffmpeg_missing = "ffmpeg was not found; install it or set its path in the Engine configuration"
 output_missing = "the task finished without producing {artifact}"
-started = "task {task} started"
-progress = "{task}: {pct}%"
-log = "{task}: {msg}"
-finished = "{task} finished successfully"
-failed = "{task} failed"
 
 [template]
 header = "project.toml: the ONLY source of truth for this sermon. Derived values (duration, frames, camera end) are NOT written here."
