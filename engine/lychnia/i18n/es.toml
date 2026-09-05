@@ -13,6 +13,8 @@ phases_gap = "Las fases del plan tienen un hueco o solape entre {end} y {start}.
 phases_start_mismatch = "La primera fase arranca en {phase} pero cut.start es {cut}."
 phases_end_mismatch = "La última fase termina en {phase} pero cut.end es {cut}."
 config_unreadable = "No se pudo leer project.toml: {detail}"
+unsupported_patch_section = "La sección {section} es una lista de tablas ([[{section}]]); editala completa desde la API, no por campos."
+unsupported_patch_value = "El campo {field} no acepta tablas ni listas en un parche; pasá valores simples."
 
 [status]
 missing_input = "falta: {items}"

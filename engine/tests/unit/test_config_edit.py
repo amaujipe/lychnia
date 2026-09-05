@@ -50,3 +50,39 @@ def test_invalid_patch_leaves_the_file_untouched(tmp_path):
     assert exc.value.key == "validation.cut_end_before_start"
     assert read_raw(p) == ORIGINAL
     assert not (tmp_path / "project.toml.partial").exists()
+
+
+AOT_ORIGINAL = ORIGINAL + """
+[[shorts]]
+id = "s1"                           # first short
+start = 10.0
+end = 20.0
+keyword = "kw"
+title = "T"
+"""
+
+
+def test_patch_rejects_array_of_tables_section(tmp_path):
+    p = tmp_path / "project.toml"
+    p.write_text(AOT_ORIGINAL, encoding="utf-8")
+    with pytest.raises(ConfigError) as exc:
+        patch_config(p, {"shorts": {"start": 5.0}})
+    assert exc.value.key == "validation.unsupported_patch_section"
+    assert read_raw(p) == AOT_ORIGINAL
+    assert not (tmp_path / "project.toml.partial").exists()
+
+
+OVERRIDE_ORIGINAL = ORIGINAL + """
+[shorts_overrides.s3]               # forced text, by position
+"-1" = "old text"
+"""
+
+
+def test_patch_rejects_nested_dict_value(tmp_path):
+    p = tmp_path / "project.toml"
+    p.write_text(OVERRIDE_ORIGINAL, encoding="utf-8")
+    with pytest.raises(ConfigError) as exc:
+        patch_config(p, {"shorts_overrides": {"s3": {"-1": "x"}}})
+    assert exc.value.key == "validation.unsupported_patch_value"
+    assert read_raw(p) == OVERRIDE_ORIGINAL
+    assert not (tmp_path / "project.toml.partial").exists()
