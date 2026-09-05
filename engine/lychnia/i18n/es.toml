@@ -72,3 +72,7 @@ plan = "plan de cámaras (Gate A): fases con la cámara del plano largo, su dura
 plan_closing_a = "últimos segundos en panorámica"
 thumbnail = "textos de la miniatura; no repite el título del video"
 publishing = "lo escribe el operador al publicar (subir queda fuera de v1)"
+example_short_keyword = "palabra"
+example_short_title = "Título gancho del short"
+example_override_text = "texto forzado de la última cue"
+example_phase_note = "plano de establecimiento: la sala mientras anuncia el pasaje"
