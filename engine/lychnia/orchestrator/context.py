@@ -51,10 +51,20 @@ class Context:
             if not partial.exists():
                 self.abort()
                 raise TaskError("task.output_missing", artifact=name)
-        finals = []
-        for partial, final in self._partials.values():
-            partial.replace(final)
-            finals.append(final)
+        renamed: list[tuple[Path, Path]] = []
+        try:
+            for name, (partial, final) in self._partials.items():
+                partial.replace(final)
+                renamed.append((partial, final))
+        except OSError as exc:
+            for partial, final in renamed:
+                try:
+                    final.replace(partial)
+                except OSError:
+                    pass
+            self.abort()
+            raise TaskError("task.commit_failed", artifact=name, detail=str(exc)) from exc
+        finals = [final for _, final in renamed]
         self._partials.clear()
         return finals
 
