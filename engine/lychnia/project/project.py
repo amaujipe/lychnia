@@ -1,6 +1,7 @@
 """One sermon project on disk: config, paths, registry and artifact resolution."""
 from __future__ import annotations
 
+import threading
 from pathlib import Path
 
 from lychnia.orchestrator.artifacts import ARTIFACTS, CONFIG_PREFIX, SOURCE_PREFIX, ArtifactSpec, is_config, is_source
@@ -19,6 +20,7 @@ class Project:
         self.artifacts = ARTIFACTS if artifacts is None else artifacts
         self._config: ProjectConfig | None = None
         self._store: StateStore | None = None
+        self._lock = threading.Lock()
 
     @property
     def id(self) -> str:
@@ -27,16 +29,21 @@ class Project:
     @property
     def config(self) -> ProjectConfig:
         if self._config is None:
-            self._config = load_config(self.paths.config_file, self.master_limit)
+            with self._lock:
+                if self._config is None:
+                    self._config = load_config(self.paths.config_file, self.master_limit)
         return self._config
 
     def reload(self) -> None:
-        self._config = None
+        with self._lock:
+            self._config = None
 
     @property
     def store(self) -> StateStore:
         if self._store is None:
-            self._store = StateStore(self.paths.state_db)
+            with self._lock:
+                if self._store is None:
+                    self._store = StateStore(self.paths.state_db)
         return self._store
 
     # ── artifacts ────────────────────────────────────────────────────────
